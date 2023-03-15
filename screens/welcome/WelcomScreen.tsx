@@ -1,10 +1,15 @@
 import React from "react";
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, View } from 'react-native';
 
-export function WelcomeScreen() {
+export function WelcomeScreen({ navigation }: any) {
   return (
     <View>
-      <Text>Welcome!</Text>
+      <Button
+        title="Navigate to the Explore page"
+        onPress={() =>
+          navigation.navigate('explore', { name: 'From Welcome' })
+        }
+      />
     </View>
   )
 }
