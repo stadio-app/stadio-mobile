@@ -1,14 +1,18 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { View, Text, Button } from 'react-native';
+import { RootStackParamList } from '../../App';
 
-export default function ExploreScreen({ navigation }: any) {
+type Props = NativeStackScreenProps<RootStackParamList, 'Explore'>
+
+export default function ExploreScreen({ navigation }: Props) {
   return (
     <View>
       <Text>Explore page!</Text>
       <Button
         title="Welcome Page"
         onPress={() =>
-          navigation.navigate('welcome', { name: 'From Explore page' })
+          navigation.navigate('Welcome')
         }
       />
     </View>

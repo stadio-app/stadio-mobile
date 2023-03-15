@@ -4,14 +4,19 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { WelcomeScreen } from './screens/welcome/WelcomScreen'
 import ExploreScreen from './screens/explore/ExploreScreen'
 
-const Stack = createNativeStackNavigator()
+export type RootStackParamList = {
+  Welcome: undefined
+  Explore: undefined
+}
+
+const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="welcome"
+          name="Welcome"
           component={WelcomeScreen}
           options={{
             title: 'Welcome',
@@ -19,7 +24,7 @@ export default function App() {
           }}
         />
         <Stack.Screen 
-          name="explore"
+          name="Explore"
           component={ExploreScreen}
           options={{
             title: "Explore"
