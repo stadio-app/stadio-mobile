@@ -5,7 +5,7 @@ import { RootStackParamList } from '../../App';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Explore'>
 
-export default function ExploreScreen({ navigation }: Props) {
+export function ExploreScreen({ navigation }: Props) {
   return (
     <View>
       <Text>Explore page!</Text>
