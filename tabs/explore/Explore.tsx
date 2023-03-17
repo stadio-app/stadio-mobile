@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#10454f',
     width: '100%',
     padding: 20,
-    paddingTop: 40,
+    paddingTop: '18%',
     subheader: {
       fontSize: 20,
       color: 'white'
