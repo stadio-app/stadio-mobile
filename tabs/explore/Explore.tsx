@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Platform } from 'react-native';
 import { SearchBar } from '@rneui/themed';
 
 export function Explore() {
-  const [search, updateSearch] = useState('');
+  const [search, setSearch] = useState('');
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -12,11 +12,11 @@ export function Explore() {
       </View>
       <SearchBar
         placeholder='Explore pick up games'
-        onChangeText={() => {}}
+        onChangeText={(value) => setSearch(value)}
         value={search}
-        platform={Platform.OS == "ios" ? "ios" : "android"}
+        platform={Platform.OS == 'ios' ? 'ios' : 'android'}
         showLoading={true}
-        loadingProps= {{}}
+        loadingProps={{}}
         round={true}
       />
     </View>
