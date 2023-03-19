@@ -23,9 +23,7 @@ export function LoginScreen({ navigation }: Props) {
           buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
           cornerRadius={5}
           style={styles.appleButton}
-          onPress={() => {
-            navigation.navigate('MainMenu');
-          }}
+          onPress={() => navigation.navigate('MainMenu')}
         />
       )}
 
@@ -33,7 +31,7 @@ export function LoginScreen({ navigation }: Props) {
         name='google'
         backgroundColor='#4285F4'
         style={styles.googleButton}
-        onPress={() => {}}
+        onPress={() => navigation.navigate('MainMenu')}
       >
         Sign in with Google
       </FontAwesome.Button>
