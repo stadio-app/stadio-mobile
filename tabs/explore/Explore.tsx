@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Platform, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  ScrollView,
+  SafeAreaView,
+} from 'react-native';
 import { SearchBar } from '@rneui/themed';
 import { persons } from './temp_data';
 import EventsListItem from '../../components/EventsListItem/EventsListItem';
@@ -7,26 +14,28 @@ import EventsListItem from '../../components/EventsListItem/EventsListItem';
 export function Explore() {
   const [search, setSearch] = useState('');
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.header.subheader}>Discover</Text>
-        <Text style={styles.header.title}>Pick-up Games</Text>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.header.subheader}>Discover</Text>
+          <Text style={styles.header.title}>Pick-up Games</Text>
+        </View>
+        <SearchBar
+          placeholder="Explore pick up games"
+          onChangeText={(value) => setSearch(value)}
+          value={search}
+          platform={Platform.OS == 'ios' ? 'ios' : 'android'}
+          showLoading={true}
+          loadingProps={{}}
+          round={true}
+        />
+        <ScrollView>
+          {persons.map((p) => (
+            <EventsListItem key={p.id} id={p.id} />
+          ))}
+        </ScrollView>
       </View>
-      <SearchBar
-        placeholder='Explore pick up games'
-        onChangeText={(value) => setSearch(value)}
-        value={search}
-        platform={Platform.OS == 'ios' ? 'ios' : 'android'}
-        showLoading={true}
-        loadingProps={{}}
-        round={true}
-      />
-      <ScrollView>
-        {persons.map((p) => (
-          <EventsListItem key={p.id} id={p.id} />
-        ))}
-      </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
