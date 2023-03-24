@@ -24,6 +24,7 @@
       "bundleIdentifier": "com.m3.stadio"
     },
     "android": {
+      "package": "com.github.stadioapp.stadiomobile",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

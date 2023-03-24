@@ -5,7 +5,7 @@ import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Platform, View, Image, StyleSheet } from 'react-native';
 
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '../../types/RootStackParamList';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -23,7 +23,7 @@ export function LoginScreen({ navigation }: Props) {
           buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
           cornerRadius={5}
           style={styles.appleButton}
-          onPress={() => {}}
+          onPress={() => navigation.navigate('MainMenu')}
         />
       )}
 
@@ -31,7 +31,7 @@ export function LoginScreen({ navigation }: Props) {
         name='google'
         backgroundColor='#4285F4'
         style={styles.googleButton}
-        onPress={() => {}}
+        onPress={() => navigation.navigate('MainMenu')}
       >
         Sign in with Google
       </FontAwesome.Button>

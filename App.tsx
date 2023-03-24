@@ -1,13 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as Screens from './screens/screens';
 
-export type RootStackParamList = {
-  Welcome: undefined;
-  Explore: undefined;
-  Login: undefined;
-};
+import { RootStackParamList } from './types/RootStackParamList';
+import * as Screens from './screens/screens';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -23,18 +19,10 @@ export default function App() {
           }}
         />
         <Stack.Screen
-          name='Welcome'
-          component={Screens.WelcomeScreen}
+          name='MainMenu'
+          component={Screens.MainMenu}
           options={{
-            title: 'Welcome',
-            // headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name='Explore'
-          component={Screens.ExploreScreen}
-          options={{
-            title: 'Explore',
+            headerShown: false,
           }}
         />
       </Stack.Navigator>
