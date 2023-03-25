@@ -1,2 +1,2 @@
-export { MainMenu } from "./main_menu/MainMenu";
-export { LoginScreen } from "./login/LoginScreen";
+export { MainMenu } from './mainMenu/MainMenu';
+export { LoginScreen } from './login/LoginScreen';
