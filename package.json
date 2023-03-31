@@ -35,7 +35,8 @@
     "undefined": "@expo/vector-icons/FontAwesome",
     "expo-auth-session": "~4.0.3",
     "expo-crypto": "~12.2.1",
-    "expo-web-browser": "~12.1.1"
+    "expo-web-browser": "~12.1.1",
+    "expo-application": "~5.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -1,15 +1,25 @@
 import * as AppleAuthentication from 'expo-apple-authentication';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Platform, View, Image, StyleSheet } from 'react-native';
 
 import { RootStackParamList } from '../../types/RootStackParamList';
+import { googleOAuth } from '../oauth/google';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 export function LoginScreen({ navigation }: Props) {
+  const [request, response, promptAsync] = googleOAuth();
+
+  useEffect(() => {
+    if (response && response.type === 'success') {
+      const token = response.authentication?.accessToken;
+      console.log(token);
+    }
+  }, [response]);
+
   return (
     <View style={styles.container}>
       <Image
@@ -28,21 +38,14 @@ export function LoginScreen({ navigation }: Props) {
       )}
 
       <FontAwesome.Button
-        name='google'
-        backgroundColor='#4285F4'
+        name="google"
+        backgroundColor="#4285F4"
         style={styles.googleButton}
-        onPress={() => navigation.navigate('MainMenu')}
+        onPress={() => promptAsync()}
+        disabled={!request}
       >
         Sign in with Google
       </FontAwesome.Button>
-
-      {/* TODO: Use the actual GoogleSignInButton when integrating authentication */}
-      {/* <GoogleSigninButton
-        style={{ width: 192, height: 48 }}
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Dark}
-        onPress={() => {}}
-      /> */}
     </View>
   );
 }
