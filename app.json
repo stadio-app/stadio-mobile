@@ -16,8 +16,7 @@
       "**/*"
     ],
     "plugins": [
-      "expo-apple-authentication",
-      "@react-native-google-signin/google-signin"
+      "expo-apple-authentication"
     ],
     "ios": {
       "supportsTablet": true,
