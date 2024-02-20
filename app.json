@@ -15,9 +15,7 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "plugins": [
-      "expo-apple-authentication"
-    ],
+    "plugins": [],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.stadioapp.stadiomobile"
