@@ -1,4 +1,3 @@
-import * as AppleAuthentication from 'expo-apple-authentication';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 import React, { useEffect } from 'react';
@@ -6,20 +5,10 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Platform, View, Image, StyleSheet } from 'react-native';
 
 import { RootStackParamList } from '../../types/RootStackParamList';
-import { googleOAuth } from '../oauth/google';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 export function LoginScreen({ navigation }: Props) {
-  const [request, response, promptAsync] = googleOAuth();
-
-  useEffect(() => {
-    if (response && response.type === 'success') {
-      const token = response.authentication?.accessToken;
-      console.log(token);
-    }
-  }, [response]);
-
   return (
     <View style={styles.container}>
       <Image
@@ -27,25 +16,28 @@ export function LoginScreen({ navigation }: Props) {
         style={styles.logo}
       ></Image>
 
-      {Platform.OS == 'ios' && (
-        <AppleAuthentication.AppleAuthenticationButton
-          buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-          buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
-          cornerRadius={5}
-          style={styles.appleButton}
-          onPress={() => navigation.navigate('MainMenu')}
-        />
-      )}
+      <View style={{ gap: 20 }}>
+        {Platform.OS == 'ios' && (
+          <FontAwesome.Button
+            backgroundColor="#fff"
+            color="#000"
+            name="apple"
+            style={styles.appleButton}
+            onPress={() => navigation.navigate('MainMenu')}
+          >
+            Sign in with Apple
+          </FontAwesome.Button>
+        )}
 
-      <FontAwesome.Button
-        name="google"
-        backgroundColor="#4285F4"
-        style={styles.googleButton}
-        onPress={() => promptAsync()}
-        disabled={!request}
-      >
-        Sign in with Google
-      </FontAwesome.Button>
+        <FontAwesome.Button
+          name="google"
+          backgroundColor="#4285F4"
+          style={styles.googleButton}
+          onPress={() => {}}
+        >
+          Sign in with Google
+        </FontAwesome.Button>
+      </View>
     </View>
   );
 }
@@ -65,7 +57,9 @@ const styles = StyleSheet.create({
   appleButton: {
     height: 50,
     width: 250,
-    marginBottom: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   googleButton: {
     height: 50,
