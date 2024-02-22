@@ -10,6 +10,7 @@ import {
 import { SearchBar } from '@rneui/themed';
 import { persons } from './temp_data';
 import EventsListItem from '../../components/EventsListItem/EventsListItem';
+import { Ionicons } from '@expo/vector-icons';
 
 export function Explore() {
   const [search, setSearch] = useState('');
@@ -25,9 +26,10 @@ export function Explore() {
           onChangeText={(value) => setSearch(value)}
           value={search}
           platform={Platform.OS == 'ios' ? 'ios' : 'android'}
-          showLoading={true}
-          loadingProps={{}}
+          // showLoading={true}
+          // loadingProps={{}}
           round={true}
+          searchIcon={<Ionicons name="search" size={25} color="#777" />}
         />
         <ScrollView>
           {persons.map((p) => (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   Platform,
@@ -11,50 +11,24 @@ import {
   Text,
 } from 'react-native';
 import { RootStackParamList } from '../../types/RootStackParamList';
-import { useLazyQuery } from '@apollo/client';
-import { setItemAsync } from 'expo-secure-store';
-import { gql } from '../../generated/gql';
-
-const LOGIN_QUERY = gql(`
-  query Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
-      user {
-        id
-        name
-        email
-        avatar
-        createdAt
-        updatedAt
-        active
-        authPlatform
-        authStateId
-      }
-    }
-  }
-`);
+import { AuthContext } from '../../store/AuthStore';
+import { ApolloError } from '@apollo/client';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
-export const JWT_KEY = 'JWT';
 
 export function LoginScreen({ navigation }: Props) {
-  const [login, { loading, error, data }] = useLazyQuery(LOGIN_QUERY);
+  const [error, setError] = useState<ApolloError>();
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { loginInternal } = React.useContext(AuthContext);
 
   const handleLogin = () => {
-    login({
-      variables: {
-        email,
-        password,
-      },
-    }).then(({ data, error, loading }) => {
-      if (error || !data) return;
-
-      const { token, user } = data.login;
-      setItemAsync(JWT_KEY, token);
-      navigation.navigate('MainMenu');
-    });
+    loginInternal({ email, password })
+      .then(() => {
+        navigation.navigate('MainMenu');
+      })
+      .catch((error) => setError(error));
   };
 
   return (
