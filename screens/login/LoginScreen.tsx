@@ -11,10 +11,11 @@ import {
   Text,
 } from 'react-native';
 import { RootStackParamList } from '../../types/RootStackParamList';
-import { gql, useLazyQuery, useQuery } from '@apollo/client';
-import { Auth, QueryLoginArgs } from '../../generated/graphql';
+import { useLazyQuery } from '@apollo/client';
+import { setItemAsync } from 'expo-secure-store';
+import { gql } from '../../generated/gql';
 
-const LOGIN_QUERY = gql`
+const LOGIN_QUERY = gql(`
   query Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       token
@@ -31,25 +32,29 @@ const LOGIN_QUERY = gql`
       }
     }
   }
-`;
+`);
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
+export const JWT_KEY = 'JWT';
 
 export function LoginScreen({ navigation }: Props) {
-  const [login, { loading, error }] = useLazyQuery<Auth, QueryLoginArgs>(
-    LOGIN_QUERY
-  );
+  const [login, { loading, error, data }] = useLazyQuery(LOGIN_QUERY);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    login({ variables: { email, password } }).then(
-      ({ data, loading, error }) => {
-        if (!loading && !error && data) {
-          navigation.navigate('MainMenu');
-        }
-      }
-    );
+    login({
+      variables: {
+        email,
+        password,
+      },
+    }).then(({ data, error, loading }) => {
+      if (error || !data) return;
+
+      const { token, user } = data.login;
+      setItemAsync(JWT_KEY, token);
+      navigation.navigate('MainMenu');
+    });
   };
 
   return (
@@ -104,7 +109,7 @@ export function LoginScreen({ navigation }: Props) {
             }}
           >
             <Button
-              color="#fff"
+              color={Platform.OS === 'android' ? '#00343e' : '#fff'}
               title={loading ? 'Logging in' : 'Login'}
               onPress={handleLogin}
               disabled={loading}

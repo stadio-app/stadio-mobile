@@ -15,10 +15,15 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "plugins": [],
+    "plugins": [
+      "expo-secure-store"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.stadioapp.stadiomobile"
+      "bundleIdentifier": "com.stadioapp.stadiomobile",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.stadioapp.stadiomobile",
