@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useState } from 'react';
-import { Auth, QueryLoginArgs } from '../generated/graphql';
+import { Auth, QueryLoginArgs, User } from '../generated/graphql';
 import * as SecureStore from 'expo-secure-store';
 import { gql } from '../generated/gql';
 import { useLazyQuery } from '@apollo/client';
@@ -7,17 +7,17 @@ import { useLazyQuery } from '@apollo/client';
 export const JWT_KEY = 'JWT';
 export type AuthState = {
   isLoggedIn: boolean;
-  authState?: Auth;
+  token?: string;
+  user?: User;
 };
 export type AuthContextType = {
   authState: AuthState;
-  loginInternal: (params: QueryLoginArgs) => Promise<void>;
+  loginInternal: (params: QueryLoginArgs) => Promise<AuthState>;
   logout: () => void;
-  verifyWithSecureStoreJwt: () => Promise<void>;
+  verifyWithSecureStoreJwt: () => Promise<AuthState>;
 };
 const initialAuthState: AuthState = {
   isLoggedIn: false,
-  authState: undefined,
 } as const;
 
 const LOGIN_QUERY = gql(`
@@ -70,11 +70,14 @@ const AuthStore = ({ children }: { children: ReactNode }) => {
     const { data, error } = await login({ variables: loginArgs });
     if (error || !data) throw error;
 
-    setAuthState({
+    const newAuthState = {
       isLoggedIn: true,
-      authState: { ...data.login },
-    });
+      token: data.login.token,
+      user: data.login.user,
+    } as AuthState;
+    setAuthState({ ...newAuthState });
     await SecureStore.setItemAsync(JWT_KEY, data.login.token);
+    return newAuthState;
   };
 
   const logout = () => {
@@ -94,13 +97,13 @@ const AuthStore = ({ children }: { children: ReactNode }) => {
       throw error;
     }
 
-    setAuthState({
+    const newAuthState = {
       isLoggedIn: true,
-      authState: {
-        token: jwt,
-        user: data.me,
-      },
-    });
+      token: jwt,
+      user: data.me,
+    };
+    setAuthState({ ...newAuthState });
+    return newAuthState;
   };
 
   return (

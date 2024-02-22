@@ -24,11 +24,13 @@ export function LoginScreen({ navigation }: Props) {
   const { loginInternal } = React.useContext(AuthContext);
 
   const handleLogin = () => {
+    setLoading(true);
     loginInternal({ email, password })
       .then(() => {
         navigation.navigate('MainMenu');
       })
-      .catch((error) => setError(error));
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
   };
 
   return (

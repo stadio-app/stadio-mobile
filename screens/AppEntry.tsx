@@ -13,18 +13,15 @@ export default function AppEntry() {
   const { authState, verifyWithSecureStoreJwt } = useContext(AuthContext);
 
   useEffect(() => {
-    verifyWithSecureStoreJwt().catch((err) => {
-      console.log('user is not authenticated');
-      setLoading(false);
-    });
+    verifyWithSecureStoreJwt()
+      .then(({ user }) => {
+        console.log(`logged in as ${user?.name} (${user?.email})`);
+      })
+      .catch((err) => {
+        console.log('user is not authenticated');
+      })
+      .finally(() => setLoading(false));
   }, []);
-
-  useEffect(() => {
-    if (!authState.isLoggedIn || !authState.authState) return;
-    const user = authState.authState.user;
-    console.log(`logged in as ${user.name} (${user.email})`);
-    setLoading(false);
-  }, [authState.isLoggedIn]);
 
   if (loading) {
     return (
