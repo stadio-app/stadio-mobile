@@ -20,33 +20,46 @@ export type Auth = {
   user: User;
 };
 
-export type Hello = {
-  __typename?: 'Hello';
-  message: Scalars['String'];
+export enum AuthPlatformType {
+  Apple = 'APPLE',
+  Google = 'GOOGLE',
+  Internal = 'INTERNAL'
+}
+
+export type CreateAccountInput = {
+  email: Scalars['String'];
   name: Scalars['String'];
+  password: Scalars['String'];
+  phoneNumber?: InputMaybe<Scalars['String']>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createAccount: User;
+};
+
+
+export type MutationCreateAccountArgs = {
+  input: CreateAccountInput;
 };
 
 export type Query = {
   __typename?: 'Query';
-  sayHello: Hello;
-  signInGoogle: Auth;
+  login: Auth;
+  me: User;
 };
 
 
-export type QuerySayHelloArgs = {
-  message?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  showMessage?: InputMaybe<Scalars['Boolean']>;
-};
-
-
-export type QuerySignInGoogleArgs = {
-  accessToken: Scalars['String'];
+export type QueryLoginArgs = {
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type User = {
   __typename?: 'User';
   active?: Maybe<Scalars['Boolean']>;
+  authPlatform?: Maybe<AuthPlatformType>;
+  authStateId: Scalars['ID'];
   avatar?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
   birthDate?: Maybe<Scalars['Time']>;
