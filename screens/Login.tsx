@@ -10,8 +10,8 @@ import {
   SafeAreaView,
   Text,
 } from 'react-native';
-import { RootStackParamList } from '../../types/RootStackParamList';
-import { AuthContext } from '../../store/AuthStore';
+import { RootStackParamList } from '../types/RootStackParamList';
+import { AuthContext } from '../store/AuthStore';
 import { ApolloError } from '@apollo/client';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
