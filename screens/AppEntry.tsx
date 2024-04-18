@@ -47,7 +47,9 @@ export default function AppEntry() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        initialRouteName={authState.isLoggedIn ? 'MainMenu' : 'Login'}
+      >
         {authState.isLoggedIn ? (
           <Stack.Screen
             name="MainMenu"

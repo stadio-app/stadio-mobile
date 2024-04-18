@@ -61,11 +61,11 @@ export function Explore() {
   );
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ backgroundColor: '#10454f' }}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.header.subheader}>Discover</Text>
-          <Text style={styles.header.title}>Pick-up Games</Text>
+          <Text style={styles.subheader}>Discover</Text>
+          <Text style={styles.title}>Pick-up Games</Text>
         </View>
         <SearchBar
           placeholder="Explore pick up games"
@@ -76,6 +76,16 @@ export function Explore() {
           // loadingProps={{}}
           round={true}
           searchIcon={<Ionicons name="search" size={25} color="#777" />}
+          clearIcon={
+            <Ionicons
+              name="close-circle"
+              size={25}
+              color="#777"
+              onPress={() => setSearch('')}
+            />
+          }
+          showCancel={false}
+          cancelButtonTitle=""
         />
         <ScrollView>
           {persons.map((p) => (
@@ -96,14 +106,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#10454f',
     width: '100%',
     padding: 20,
-    paddingTop: '18%',
-    subheader: {
-      fontSize: 20,
-      color: 'white',
-    },
-    title: {
-      fontSize: 40,
-      color: '#BDE038',
-    },
+    paddingTop: '10%',
+  },
+  subheader: {
+    fontSize: 20,
+    color: 'white',
+  },
+  title: {
+    fontSize: 40,
+    color: '#BDE038',
   },
 });
