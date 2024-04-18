@@ -15,6 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  query Login($email: String!, $password: String!) {\n    login(email: $email, password: $password) {\n      token\n      user {\n        id\n        name\n        email\n        avatar\n        createdAt\n        updatedAt\n        active\n        authPlatform\n        authStateId\n      }\n    }\n  }\n": types.LoginDocument,
     "\n  query Me {\n    me {\n      id\n      name\n      email\n      avatar\n      createdAt\n      updatedAt\n      active\n      authPlatform\n      authStateId\n    }\n  }\n": types.MeDocument,
+    "\n  query Events($filters: AllEventsFilter!) {\n    allEvents(filter: $filters) {\n      id\n      type\n      startDate\n      endDate\n      location {\n        id\n        name\n        address {\n          id\n          latitude\n          longitude\n          fullAddress\n          mapsLink\n          countryCode\n          country\n        }\n      }\n      createdBy {\n        id\n        name\n      }\n    }\n  }\n": types.EventsDocument,
 };
 
 /**
@@ -39,6 +40,10 @@ export function gql(source: "\n  query Login($email: String!, $password: String!
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query Me {\n    me {\n      id\n      name\n      email\n      avatar\n      createdAt\n      updatedAt\n      active\n      authPlatform\n      authStateId\n    }\n  }\n"): (typeof documents)["\n  query Me {\n    me {\n      id\n      name\n      email\n      avatar\n      createdAt\n      updatedAt\n      active\n      authPlatform\n      authStateId\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query Events($filters: AllEventsFilter!) {\n    allEvents(filter: $filters) {\n      id\n      type\n      startDate\n      endDate\n      location {\n        id\n        name\n        address {\n          id\n          latitude\n          longitude\n          fullAddress\n          mapsLink\n          countryCode\n          country\n        }\n      }\n      createdBy {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query Events($filters: AllEventsFilter!) {\n    allEvents(filter: $filters) {\n      id\n      type\n      startDate\n      endDate\n      location {\n        id\n        name\n        address {\n          id\n          latitude\n          longitude\n          fullAddress\n          mapsLink\n          countryCode\n          country\n        }\n      }\n      createdBy {\n        id\n        name\n      }\n    }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};
