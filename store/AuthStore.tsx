@@ -1,8 +1,8 @@
 import { ReactNode, createContext, useState } from 'react';
 import { Auth, QueryLoginArgs, User } from '../generated/graphql';
 import * as SecureStore from 'expo-secure-store';
-import { gql } from '../generated/gql';
 import { useLazyQuery } from '@apollo/client';
+import { gql } from '../generated';
 
 export const JWT_KEY = 'JWT';
 export type AuthState = {
@@ -55,6 +55,26 @@ const ME_QUERY = gql(`
   }
 `);
 
+const GOOGLE_OAUTH_QUERY = gql(`
+  query GoogleOauth($accessToken: String!) {
+    googleOAuth(accessToken: $accessToken) {
+      token
+      user {
+        id
+        name
+        email
+        avatar
+        createdAt
+        updatedAt
+        active
+        authPlatform
+        authStateId
+      }
+      isNewUser
+    }
+  }
+`);
+
 export const AuthContext = createContext<AuthContextType>(
   {} as AuthContextType
 );
@@ -62,22 +82,34 @@ export const AuthContext = createContext<AuthContextType>(
 const AuthStore = ({ children }: { children: ReactNode }) => {
   const [login] = useLazyQuery(LOGIN_QUERY);
   const [me] = useLazyQuery(ME_QUERY);
+  const [googleOAuth] = useLazyQuery(GOOGLE_OAUTH_QUERY);
   const [authState, setAuthState] = useState({
     ...initialAuthState,
   });
+
+  const initiateLogin = async (token: string, user: User) => {
+    const newAuthState = {
+      isLoggedIn: true,
+      token,
+      user,
+    } as AuthState;
+    setAuthState({ ...newAuthState });
+    await SecureStore.setItemAsync(JWT_KEY, token);
+    return newAuthState;
+  };
 
   const loginInternal = async (loginArgs: QueryLoginArgs) => {
     const { data, error } = await login({ variables: loginArgs });
     if (error || !data) throw error;
 
-    const newAuthState = {
-      isLoggedIn: true,
-      token: data.login.token,
-      user: data.login.user,
-    } as AuthState;
-    setAuthState({ ...newAuthState });
-    await SecureStore.setItemAsync(JWT_KEY, data.login.token);
-    return newAuthState;
+    return await initiateLogin(data.login.token, data.login.user);
+  };
+
+  const loginGoogle = async (accessToken: string) => {
+    const { data, error } = await googleOAuth({ variables: { accessToken } });
+    if (error || !data) throw error;
+
+    return await initiateLogin(data.googleOAuth.token, data.googleOAuth.user);
   };
 
   const logout = () => {
