@@ -12,176 +12,283 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /**
-   * Define a Relay Cursor type:
-   * https://relay.dev/graphql/connections.htm#sec-Cursor
-   */
-  Cursor: any;
   Time: any;
 };
 
-export type Address = Node & {
+export type Address = {
   __typename?: 'Address';
+  country?: Maybe<Scalars['String']>;
+  countryCode: Scalars['String'];
   createdAt: Scalars['Time'];
+  createdBy?: Maybe<CreatedByUser>;
+  createdById?: Maybe<Scalars['ID']>;
+  distance?: Maybe<Scalars['Float']>;
   fullAddress: Scalars['String'];
   id: Scalars['ID'];
   latitude: Scalars['Float'];
-  location: Location;
   longitude: Scalars['Float'];
   mapsLink: Scalars['String'];
   updatedAt: Scalars['Time'];
+  updatedBy?: Maybe<UpdatedByUser>;
+  updatedById?: Maybe<Scalars['ID']>;
 };
 
-export type AuthState = {
-  __typename?: 'AuthState';
+export type AdministrativeDivision = {
+  __typename?: 'AdministrativeDivision';
+  cities: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type AllEventsFilter = {
+  countryCode: Scalars['String'];
+  endDate: Scalars['Time'];
+  latitude: Scalars['Float'];
+  longitude: Scalars['Float'];
+  radiusMeters: Scalars['Int'];
+  startDate: Scalars['Time'];
+};
+
+export type Auth = {
+  __typename?: 'Auth';
+  isNewUser?: Maybe<Scalars['Boolean']>;
   token: Scalars['String'];
   user: User;
 };
 
-export type Event = Node & {
+export enum AuthPlatformType {
+  Apple = 'APPLE',
+  Google = 'GOOGLE',
+  Internal = 'INTERNAL'
+}
+
+export type Country = {
+  __typename?: 'Country';
+  administrativeDivisions: Array<AdministrativeDivision>;
+  callingCode?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  currency?: Maybe<Currency>;
+  language?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type CreateAccountInput = {
+  email: Scalars['String'];
+  name: Scalars['String'];
+  password: Scalars['String'];
+  phoneNumber?: InputMaybe<Scalars['String']>;
+};
+
+export type CreateAddress = {
+  administrativeDivision: Scalars['String'];
+  city: Scalars['String'];
+  countryCode: Scalars['String'];
+  fullAddress: Scalars['String'];
+  latitude: Scalars['Float'];
+  longitude: Scalars['Float'];
+  mapsLink: Scalars['String'];
+};
+
+export type CreateEvent = {
+  description?: InputMaybe<Scalars['String']>;
+  endDate: Scalars['Time'];
+  locationId: Scalars['ID'];
+  name: Scalars['String'];
+  startDate: Scalars['Time'];
+  type: Scalars['String'];
+};
+
+export type CreateLocation = {
+  address: CreateAddress;
+  description?: InputMaybe<Scalars['String']>;
+  instances: Array<CreateLocationInstance>;
+  name: Scalars['String'];
+  schedule: Array<CreateLocationSchedule>;
+  type: Scalars['String'];
+};
+
+export type CreateLocationInstance = {
+  name: Scalars['String'];
+};
+
+export type CreateLocationSchedule = {
+  available: Scalars['Boolean'];
+  day: WeekDay;
+  from?: InputMaybe<Scalars['Int']>;
+  on?: InputMaybe<Scalars['Time']>;
+  to?: InputMaybe<Scalars['Int']>;
+};
+
+export type CreatedByUser = {
+  __typename?: 'CreatedByUser';
+  active?: Maybe<Scalars['Boolean']>;
+  avatar?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+};
+
+export type Currency = {
+  __typename?: 'Currency';
+  currencyCode: Scalars['String'];
+  decimals: Scalars['Int'];
+  name: Scalars['String'];
+  numToBasic?: Maybe<Scalars['Int']>;
+  symbol: Scalars['String'];
+  symbolNative: Scalars['String'];
+};
+
+export type Event = {
   __typename?: 'Event';
+  approved: Scalars['Boolean'];
   createdAt: Scalars['Time'];
+  createdBy?: Maybe<CreatedByUser>;
+  createdById?: Maybe<Scalars['ID']>;
+  description?: Maybe<Scalars['String']>;
   endDate: Scalars['Time'];
   id: Scalars['ID'];
   location?: Maybe<Location>;
+  locationId: Scalars['ID'];
+  locationInstanceId: Scalars['ID'];
   name: Scalars['String'];
-  participants?: Maybe<Array<Participant>>;
   startDate: Scalars['Time'];
-  type?: Maybe<Scalars['String']>;
+  type: Scalars['String'];
   updatedAt: Scalars['Time'];
+  updatedBy?: Maybe<UpdatedByUser>;
+  updatedById?: Maybe<Scalars['ID']>;
 };
 
-export type Location = Node & {
+export type EventShallow = {
+  __typename?: 'EventShallow';
+  approved: Scalars['Boolean'];
+  createdAt: Scalars['Time'];
+  createdById?: Maybe<Scalars['ID']>;
+  description?: Maybe<Scalars['String']>;
+  endDate: Scalars['Time'];
+  id: Scalars['ID'];
+  locationId: Scalars['ID'];
+  locationInstanceId: Scalars['ID'];
+  name: Scalars['String'];
+  startDate: Scalars['Time'];
+  type: Scalars['String'];
+  updatedAt: Scalars['Time'];
+  updatedById?: Maybe<Scalars['ID']>;
+};
+
+export type Location = {
   __typename?: 'Location';
   address?: Maybe<Address>;
+  addressId: Scalars['ID'];
   createdAt: Scalars['Time'];
-  events?: Maybe<Array<Event>>;
+  createdBy?: Maybe<CreatedByUser>;
+  createdById?: Maybe<Scalars['ID']>;
+  deleted: Scalars['Boolean'];
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  locationInstances: Array<LocationInstance>;
+  locationSchedule: Array<LocationSchedule>;
   name: Scalars['String'];
   owner?: Maybe<Owner>;
-  reviews?: Maybe<Array<Review>>;
+  ownerId?: Maybe<Scalars['ID']>;
+  status: Scalars['String'];
   type: Scalars['String'];
+  updatedAt: Scalars['Time'];
+  updatedBy?: Maybe<UpdatedByUser>;
+  updatedById?: Maybe<Scalars['ID']>;
+};
+
+export type LocationInstance = {
+  __typename?: 'LocationInstance';
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+};
+
+export type LocationSchedule = {
+  __typename?: 'LocationSchedule';
+  available: Scalars['Boolean'];
+  createdAt: Scalars['Time'];
+  day: WeekDay;
+  from?: Maybe<Scalars['Time']>;
+  id: Scalars['ID'];
+  location?: Maybe<Location>;
+  locationId: Scalars['ID'];
+  on?: Maybe<Scalars['Time']>;
+  toDuration?: Maybe<Scalars['Int']>;
   updatedAt: Scalars['Time'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createOwner: Owner;
+  createAccount: User;
+  createEvent: EventShallow;
+  createLocation: Location;
 };
 
 
-export type MutationCreateOwnerArgs = {
-  input: OwnerInput;
+export type MutationCreateAccountArgs = {
+  input: CreateAccountInput;
 };
 
-/**
- * An object with an ID.
- * Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
- */
-export type Node = {
-  /** The id of the object. */
-  id: Scalars['ID'];
+
+export type MutationCreateEventArgs = {
+  input: CreateEvent;
 };
 
-/** Possible directions in which to order a list of items when provided an `orderBy` argument. */
-export enum OrderDirection {
-  /** Specifies an ascending order for a given `orderBy` argument. */
-  Asc = 'ASC',
-  /** Specifies a descending order for a given `orderBy` argument. */
-  Desc = 'DESC'
-}
 
-export type Owner = Node & {
+export type MutationCreateLocationArgs = {
+  input: CreateLocation;
+};
+
+export type Owner = {
   __typename?: 'Owner';
   createdAt: Scalars['Time'];
   firstName: Scalars['String'];
   fullName: Scalars['String'];
   id: Scalars['ID'];
-  idURL: Scalars['String'];
   lastName: Scalars['String'];
-  locations?: Maybe<Array<Location>>;
   middleName?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Time'];
-  user: User;
+  user?: Maybe<UserShallow>;
+  userId: Scalars['ID'];
   verified: Scalars['Boolean'];
-};
-
-export type OwnerInput = {
-  firstName: Scalars['String'];
-  idURL: Scalars['String'];
-  lastName: Scalars['String'];
-  middleName?: InputMaybe<Scalars['String']>;
-};
-
-/**
- * Information about pagination in a connection.
- * https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo
- */
-export type PageInfo = {
-  __typename?: 'PageInfo';
-  /** When paginating forwards, the cursor to continue. */
-  endCursor?: Maybe<Scalars['Cursor']>;
-  /** When paginating forwards, are there more items? */
-  hasNextPage: Scalars['Boolean'];
-  /** When paginating backwards, are there more items? */
-  hasPreviousPage: Scalars['Boolean'];
-  /** When paginating backwards, the cursor to continue. */
-  startCursor?: Maybe<Scalars['Cursor']>;
-};
-
-export type Participant = Node & {
-  __typename?: 'Participant';
-  admin: Scalars['Boolean'];
-  createdAt: Scalars['Time'];
-  event?: Maybe<Event>;
-  id: Scalars['ID'];
-  nickname?: Maybe<Scalars['String']>;
-  participates: Scalars['Boolean'];
-  reviews?: Maybe<Array<Review>>;
-  skillLevel?: Maybe<Scalars['String']>;
-  updatedAt: Scalars['Time'];
-  user?: Maybe<User>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  /** Fetches an object given its ID. */
-  node?: Maybe<Node>;
-  /** Lookup nodes by a list of IDs. */
-  nodes: Array<Maybe<Node>>;
-  user: User;
-  users: Array<User>;
+  allEvents: Array<Event>;
+  getAllCountries: Array<Country>;
+  googleOAuth: Auth;
+  login: Auth;
+  me: User;
 };
 
 
-export type QueryNodeArgs = {
+export type QueryAllEventsArgs = {
+  filter: AllEventsFilter;
+};
+
+
+export type QueryGoogleOAuthArgs = {
+  accessToken: Scalars['String'];
+};
+
+
+export type QueryLoginArgs = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type UpdatedByUser = {
+  __typename?: 'UpdatedByUser';
+  active?: Maybe<Scalars['Boolean']>;
+  avatar?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  name: Scalars['String'];
 };
 
-
-export type QueryNodesArgs = {
-  ids: Array<Scalars['ID']>;
-};
-
-
-export type QueryUserArgs = {
-  id: Scalars['ID'];
-};
-
-export type Review = Node & {
-  __typename?: 'Review';
-  createdAt: Scalars['Time'];
-  id: Scalars['ID'];
-  location?: Maybe<Location>;
-  message: Scalars['String'];
-  participant?: Maybe<Participant>;
-  rating: Scalars['Float'];
-  updatedAt: Scalars['Time'];
-};
-
-export type User = Node & {
+export type User = {
   __typename?: 'User';
   active: Scalars['Boolean'];
+  authPlatform: AuthPlatformType;
+  authStateId: Scalars['ID'];
   avatar?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
   birthDate?: Maybe<Scalars['Time']>;
@@ -189,22 +296,57 @@ export type User = Node & {
   email: Scalars['String'];
   id: Scalars['ID'];
   name: Scalars['String'];
-  owner?: Maybe<Owner>;
-  participants?: Maybe<Array<Participant>>;
   phoneNumber?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Time'];
 };
 
-export type UserInput = {
-  avatarUrl?: InputMaybe<Scalars['String']>;
-  email: Scalars['String'];
+export type UserShallow = {
+  __typename?: 'UserShallow';
+  active?: Maybe<Scalars['Boolean']>;
+  avatar?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
   name: Scalars['String'];
 };
 
-export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
+export enum WeekDay {
+  Friday = 'FRIDAY',
+  Monday = 'MONDAY',
+  Saturday = 'SATURDAY',
+  Sunday = 'SUNDAY',
+  Thursday = 'THURSDAY',
+  Tuesday = 'TUESDAY',
+  Wednesday = 'WEDNESDAY'
+}
+
+export type LoginQueryVariables = Exact<{
+  email: Scalars['String'];
+  password: Scalars['String'];
+}>;
 
 
-export type GetAllUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, email: string, phoneNumber?: string | null, name: string, avatar?: string | null, active: boolean, owner?: { __typename?: 'Owner', id: string, firstName: string, lastName: string, middleName?: string | null, verified: boolean, locations?: Array<{ __typename?: 'Location', id: string, name: string, address?: { __typename?: 'Address', id: string, latitude: number, longitude: number } | null }> | null } | null }> };
+export type LoginQuery = { __typename?: 'Query', login: { __typename?: 'Auth', token: string, user: { __typename?: 'User', id: string, name: string, email: string, avatar?: string | null, createdAt: any, updatedAt: any, active: boolean, authPlatform: AuthPlatformType, authStateId: string } } };
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export const GetAllUsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"active"}},{"kind":"Field","name":{"kind":"Name","value":"owner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"verified"}},{"kind":"Field","name":{"kind":"Name","value":"locations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetAllUsersQuery, GetAllUsersQueryVariables>;
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, name: string, email: string, avatar?: string | null, createdAt: any, updatedAt: any, active: boolean, authPlatform: AuthPlatformType, authStateId: string } };
+
+export type GoogleOauthQueryVariables = Exact<{
+  accessToken: Scalars['String'];
+}>;
+
+
+export type GoogleOauthQuery = { __typename?: 'Query', googleOAuth: { __typename?: 'Auth', token: string, isNewUser?: boolean | null, user: { __typename?: 'User', id: string, name: string, email: string, avatar?: string | null, createdAt: any, updatedAt: any, active: boolean, authPlatform: AuthPlatformType, authStateId: string } } };
+
+export type EventsQueryVariables = Exact<{
+  filters: AllEventsFilter;
+}>;
+
+
+export type EventsQuery = { __typename?: 'Query', allEvents: Array<{ __typename?: 'Event', id: string, type: string, startDate: any, endDate: any, location?: { __typename?: 'Location', id: string, name: string, address?: { __typename?: 'Address', id: string, latitude: number, longitude: number, fullAddress: string, mapsLink: string, countryCode: string, country?: string | null } | null } | null, createdBy?: { __typename?: 'CreatedByUser', id: string, name: string } | null }> };
+
+
+export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"active"}},{"kind":"Field","name":{"kind":"Name","value":"authPlatform"}},{"kind":"Field","name":{"kind":"Name","value":"authStateId"}}]}}]}}]}}]} as unknown as DocumentNode<LoginQuery, LoginQueryVariables>;
+export const MeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"active"}},{"kind":"Field","name":{"kind":"Name","value":"authPlatform"}},{"kind":"Field","name":{"kind":"Name","value":"authStateId"}}]}}]}}]} as unknown as DocumentNode<MeQuery, MeQueryVariables>;
+export const GoogleOauthDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GoogleOauth"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"googleOAuth"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"accessToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"active"}},{"kind":"Field","name":{"kind":"Name","value":"authPlatform"}},{"kind":"Field","name":{"kind":"Name","value":"authStateId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isNewUser"}}]}}]}}]} as unknown as DocumentNode<GoogleOauthQuery, GoogleOauthQueryVariables>;
+export const EventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Events"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filters"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AllEventsFilter"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filters"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"location"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"fullAddress"}},{"kind":"Field","name":{"kind":"Name","value":"mapsLink"}},{"kind":"Field","name":{"kind":"Name","value":"countryCode"}},{"kind":"Field","name":{"kind":"Name","value":"country"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<EventsQuery, EventsQueryVariables>;

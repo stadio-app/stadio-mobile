@@ -1,7 +1,7 @@
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  schema: 'http://localhost:8080/graphql',
+  schema: process.env.EXPO_PUBLIC_API_GQL_URL ?? 'http://localhost:8080/graphql',
   documents: ['**/*.tsx', '!node_modules/**/*.tsx'],
   generates: {
     './generated/': {

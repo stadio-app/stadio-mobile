@@ -2,6 +2,7 @@
   "expo": {
     "name": "Stadio Mobile",
     "slug": "stadio-mobile",
+    "scheme": "stadiomobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,21 +16,21 @@
       "**/*"
     ],
     "plugins": [
-      "expo-apple-authentication",
-      "@react-native-google-signin/google-signin"
+      "expo-secure-store"
     ],
     "ios": {
       "supportsTablet": true,
-      "googleServicesFile": "./GoogleService-Info.plist",
-      "bundleIdentifier": "com.m3.stadio"
+      "bundleIdentifier": "com.stadioapp.stadiomobile",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
-      "package": "com.github.stadioapp.stadiomobile",
+      "package": "com.stadioapp.stadiomobile",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "googleServicesFile": "./google-services.json"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
