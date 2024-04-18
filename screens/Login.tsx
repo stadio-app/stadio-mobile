@@ -37,7 +37,7 @@ export function LoginScreen({ navigation }: Props) {
     <SafeAreaView style={{ backgroundColor: '#10454f', height: '100%' }}>
       <View style={{ ...styles.container, paddingHorizontal: 30 }}>
         <Image
-          source={require('../../assets/logo-base.png')}
+          source={require('../assets/logo-base.png')}
           style={styles.logo}
         ></Image>
 
