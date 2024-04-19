@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,13 @@ import { SearchBar } from '@rneui/themed';
 import { persons } from './temp_data';
 import EventsListItem from '../../components/EventsListItem/EventsListItem';
 import { Ionicons } from '@expo/vector-icons';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { EventsQuery, EventsQueryVariables } from '../../generated/graphql';
+import { gql } from '../../generated';
+import { EventsList } from './EventsList';
+import { AuthContext } from '../../store/AuthStore';
 
-const ALL_EVENTS = gql`
+const ALL_EVENTS = gql(`
   query Events($filters: AllEventsFilter!) {
     allEvents(filter: $filters) {
       id
@@ -40,13 +43,15 @@ const ALL_EVENTS = gql`
       }
     }
   }
-`;
+`);
 
 export function Explore() {
+  const { authState } = useContext(AuthContext);
   const [search, setSearch] = useState('');
   const { data, loading, error } = useQuery<EventsQuery, EventsQueryVariables>(
     ALL_EVENTS,
     {
+      context: { headers: { authorization: `Bearer ${authState.token}` } },
       variables: {
         filters: {
           radiusMeters: 6_000_000,
@@ -59,6 +64,10 @@ export function Explore() {
       },
     }
   );
+
+  if (data) {
+    console.log(data.allEvents);
+  }
 
   return (
     <SafeAreaView style={{ backgroundColor: '#10454f' }}>
@@ -88,9 +97,7 @@ export function Explore() {
           cancelButtonTitle=""
         />
         <ScrollView>
-          {persons.map((p) => (
-            <EventsListItem key={p.id} id={p.id} />
-          ))}
+          {data ? <EventsList events={data.allEvents} /> : <></>}
         </ScrollView>
       </View>
     </SafeAreaView>

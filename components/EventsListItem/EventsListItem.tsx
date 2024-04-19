@@ -6,33 +6,38 @@ import {
   EvilIcons,
   MaterialCommunityIcons,
 } from '@expo/vector-icons';
-import { EventsListItemType } from '../../types/EventsListItemType';
 import { Avatar } from '@rneui/base';
 import { ListItemChevron } from '@rneui/base/dist/ListItem/ListItem.Chevron';
+import { Event } from '../../generated/graphql';
+import dayjs from 'dayjs';
 
-export default function EventsListItem({ id }: EventsListItemType) {
+export type EventListItemProps = {
+  event: Event;
+};
+
+export default function EventsListItem({ event }: EventListItemProps) {
   type PropsWithChildren<P> = P & { children?: ReactNode };
   const IconView = ({ children }: PropsWithChildren<{}>) => {
     return <View style={styles.iconView}>{children}</View>;
   };
   return (
-    <View key={id} style={styles.listItem}>
-      {(parseInt(id) === 1 || parseInt(id) % 3 == 0) && (
+    <View key={event.id} style={styles.listItem}>
+      {(parseInt(event.id) === 1 || parseInt(event.id) % 3 == 0) && (
         <Text style={styles.listItem.header}>Today</Text>
       )}
       <ListItem bottomDivider>
         <Avatar size={100} source={require('../../assets/icon.png')} />
         <ListItem.Content>
-          <ListItem.Title>Naperville Yard Indoor Sports Complex</ListItem.Title>
+          <ListItem.Title>{event.location?.name}</ListItem.Title>
           <ListItem.Subtitle style={styles.contentGrid}>
             <View>
               <IconView>
                 <EvilIcons name="location" />
-                <Text>Naperville, IL</Text>
+                <Text>{event.location?.address?.fullAddress}</Text>
               </IconView>
               <IconView>
                 <Ionicons name="time-outline" />
-                <Text>9:30 PM</Text>
+                <Text>{dayjs(event.startDate).format('h:mm A')}</Text>
               </IconView>
             </View>
             <View>
