@@ -13,8 +13,15 @@ import {
 import { RootStackParamList } from '../types/RootStackParamList';
 import { AuthContext } from '../store/AuthStore';
 import { ApolloError } from '@apollo/client';
+import * as Google from 'expo-auth-session/providers/google';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
+
+const GOOGLE_CONFIG: Partial<Google.GoogleAuthRequestConfig> = {
+  androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
+  iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+  webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+};
 
 export function LoginScreen({ navigation }: Props) {
   const [createAccount, setCreateAccount] = useState(false);
@@ -24,6 +31,8 @@ export function LoginScreen({ navigation }: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { loginInternal, createUserHandler } = React.useContext(AuthContext);
+
+  const [request, response, promptAsync] = Google.useAuthRequest(GOOGLE_CONFIG);
 
   const handleLogin = () => {
     setLoading(true);
@@ -143,6 +152,14 @@ export function LoginScreen({ navigation }: Props) {
               disabled={loading}
             />
           </View>
+
+          <Text style={{ textAlign: 'center', color: 'white' }}>OR</Text>
+
+          <Button
+            color={Platform.OS === 'android' ? '#00343e' : '#fff'}
+            title="Sign in with Google"
+            onPress={() => promptAsync()}
+          />
           <Text
             style={{ color: 'white', alignSelf: 'center' }}
             onPress={() => handleCreateAccountClick()}
