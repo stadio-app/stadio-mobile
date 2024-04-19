@@ -16,13 +16,13 @@
     "plugins": ["expo-secure-store"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.stadioapp.stadiomobile",
+      "bundleIdentifier": "host.exp.exponent",
       "config": {
         "usesNonExemptEncryption": false
       }
     },
     "android": {
-      "package": "com.stadioapp.stadiomobile",
+      "package": "host.exp.exponent",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
