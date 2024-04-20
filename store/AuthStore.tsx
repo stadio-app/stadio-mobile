@@ -1,5 +1,10 @@
 import { ReactNode, createContext, useState } from 'react';
-import { Auth, CreateAccountInput, QueryLoginArgs, User } from '../generated/graphql';
+import {
+  Auth,
+  CreateAccountInput,
+  QueryLoginArgs,
+  User,
+} from '../generated/graphql';
 import * as SecureStore from 'expo-secure-store';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { gql } from '../generated';
@@ -121,7 +126,7 @@ const AuthStore = ({ children }: { children: ReactNode }) => {
   const createUserHandler = async (createUserInput: CreateAccountInput) => {
     const { data } = await createUser({ variables: createUserInput });
     if (!data) throw 'Error creating new account';
-  }
+  };
 
   const loginInternal = async (loginArgs: QueryLoginArgs) => {
     const { data, error } = await login({ variables: loginArgs });
@@ -165,7 +170,13 @@ const AuthStore = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ authState,  createUserHandler, loginInternal, logout, verifyWithSecureStoreJwt }}
+      value={{
+        authState,
+        createUserHandler,
+        loginInternal,
+        logout,
+        verifyWithSecureStoreJwt,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -31,7 +31,9 @@ export function Profile({ navigation }: Props) {
           Add New Location
         </Button>
         <Button color={'secondary'}>New Event</Button>
-        <Button color={'error'} onPress={handleLogout}>Log Out</Button>
+        <Button color={'error'} onPress={handleLogout}>
+          Log Out
+        </Button>
       </View>
     </SafeAreaView>
   );

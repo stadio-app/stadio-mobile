@@ -33,20 +33,27 @@ export function LoginScreen({ navigation }: Props) {
       .then(() => {
         navigation.navigate('MainMenu');
       })
-      .catch((error) => { setError(error); alert(error); })
+      .catch((error) => {
+        setError(error);
+        alert(error);
+      })
       .finally(() => setLoading(false));
   };
 
   const handleSignup = () => {
     setLoading(true);
     createUserHandler({ email, name, password })
-    .then(() => {
-      alert('Account created successfully!');
-      setCreateAccount(false);
-      setCreateAccountSuccess(true);
-    }).catch((error) => { setError(error); alert(error); })
-    .finally(() => setLoading(false));
-  }
+      .then(() => {
+        alert('Account created successfully!');
+        setCreateAccount(false);
+        setCreateAccountSuccess(true);
+      })
+      .catch((error) => {
+        setError(error);
+        alert(error);
+      })
+      .finally(() => setLoading(false));
+  };
 
   return (
     <SafeAreaView style={{ backgroundColor: '#10454f', height: '100%' }}>
@@ -57,8 +64,7 @@ export function LoginScreen({ navigation }: Props) {
         ></Image>
 
         <View style={{ gap: 20, width: '100%' }}>
-          {
-            createAccount &&
+          {createAccount && (
             <TextInput
               style={styles.input}
               onChangeText={setName}
@@ -69,7 +75,7 @@ export function LoginScreen({ navigation }: Props) {
               autoComplete="name"
               editable={!loading}
             />
-          }
+          )}
 
           <TextInput
             style={styles.input}
@@ -115,17 +121,29 @@ export function LoginScreen({ navigation }: Props) {
           >
             <Button
               color={Platform.OS === 'android' ? '#00343e' : '#fff'}
-              title={createAccount ? (loading ? 'Signing up' : 'Sign up') : (loading ? 'Logging in' : 'Login')}
+              title={
+                createAccount
+                  ? loading
+                    ? 'Signing up'
+                    : 'Sign up'
+                  : loading
+                    ? 'Logging in'
+                    : 'Login'
+              }
               onPress={createAccount ? handleSignup : handleLogin}
               disabled={loading}
             />
           </View>
-          {
-            !createAccountSuccess &&
-            <Text style={{color: 'white', alignSelf: 'center'}} onPress={() => setCreateAccount(!createAccount)}>
-              {!createAccount ? 'Creating a new account?' : 'Already have an account? Login'}
+          {!createAccountSuccess && (
+            <Text
+              style={{ color: 'white', alignSelf: 'center' }}
+              onPress={() => setCreateAccount(!createAccount)}
+            >
+              {!createAccount
+                ? 'Creating a new account?'
+                : 'Already have an account? Login'}
             </Text>
-          }
+          )}
         </View>
       </View>
     </SafeAreaView>
