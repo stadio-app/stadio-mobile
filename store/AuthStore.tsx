@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useState } from 'react';
-import { Auth, QueryLoginArgs, User } from '../generated/graphql';
+import { Auth, CreateAccountInput, QueryLoginArgs, User } from '../generated/graphql';
 import * as SecureStore from 'expo-secure-store';
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { gql } from '../generated';
 
 export const JWT_KEY = 'JWT';
@@ -12,6 +12,7 @@ export type AuthState = {
 };
 export type AuthContextType = {
   authState: AuthState;
+  createUserHandler: (params: CreateAccountInput) => Promise<void>;
   loginInternal: (params: QueryLoginArgs) => Promise<AuthState>;
   logout: () => void;
   verifyWithSecureStoreJwt: () => Promise<AuthState>;
@@ -19,6 +20,24 @@ export type AuthContextType = {
 const initialAuthState: AuthState = {
   isLoggedIn: false,
 } as const;
+
+const CREATE_USER_QUERY = gql(`
+  mutation CreateAccount($email: String!, $name: String!, $password: String!) {
+    createAccount(input:{
+      email: $email,
+      name: $name,
+      password: $password
+    }) {
+      id
+      name
+      email
+      phoneNumber
+      createdAt
+      updatedAt
+      authPlatform
+    }
+  }
+`);
 
 const LOGIN_QUERY = gql(`
   query Login($email: String!, $password: String!) {
@@ -80,6 +99,7 @@ export const AuthContext = createContext<AuthContextType>(
 );
 
 const AuthStore = ({ children }: { children: ReactNode }) => {
+  const [createUser] = useMutation(CREATE_USER_QUERY);
   const [login] = useLazyQuery(LOGIN_QUERY);
   const [me] = useLazyQuery(ME_QUERY);
   const [googleOAuth] = useLazyQuery(GOOGLE_OAUTH_QUERY);
@@ -97,6 +117,11 @@ const AuthStore = ({ children }: { children: ReactNode }) => {
     await SecureStore.setItemAsync(JWT_KEY, token);
     return newAuthState;
   };
+
+  const createUserHandler = async (createUserInput: CreateAccountInput) => {
+    const { data } = await createUser({ variables: createUserInput });
+    if (!data) throw 'Error creating new account';
+  }
 
   const loginInternal = async (loginArgs: QueryLoginArgs) => {
     const { data, error } = await login({ variables: loginArgs });
@@ -140,7 +165,7 @@ const AuthStore = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ authState, loginInternal, logout, verifyWithSecureStoreJwt }}
+      value={{ authState,  createUserHandler, loginInternal, logout, verifyWithSecureStoreJwt }}
     >
       {children}
     </AuthContext.Provider>
