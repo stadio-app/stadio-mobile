@@ -2,13 +2,21 @@ import React, { useContext } from 'react';
 import { SafeAreaView, View, Text } from 'react-native';
 import { AuthContext } from '../../store/AuthStore';
 import { Button } from '@rneui/base';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../types/RootStackParamList';
 
 const paddingHorizontal = 15;
 
-export function Profile() {
-  const { authState } = useContext(AuthContext);
+type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
+
+export function Profile({ navigation }: Props) {
+  const { logout, authState } = useContext(AuthContext);
   if (!authState.user) return <></>;
 
+  const handleLogout = () => {
+    logout();
+    navigation.navigate('MainMenu');
+  };
   return (
     <SafeAreaView>
       <View style={{ paddingHorizontal, paddingTop: '18%' }}>
@@ -23,6 +31,7 @@ export function Profile() {
           Add New Location
         </Button>
         <Button color={'secondary'}>New Event</Button>
+        <Button color={'error'} onPress={handleLogout}>Log Out</Button>
       </View>
     </SafeAreaView>
   );

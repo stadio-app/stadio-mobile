@@ -3,4 +3,5 @@ export type RootStackParamList = {
   MainMenu: undefined;
   Explore: undefined;
   CreateLocation: undefined;
+  Profile: undefined;
 };
