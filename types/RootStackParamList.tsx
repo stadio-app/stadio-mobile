@@ -4,4 +4,5 @@ export type RootStackParamList = {
   Explore: undefined;
   CreateLocation: undefined;
   Profile: undefined;
+  EmailVerification: undefined;
 };

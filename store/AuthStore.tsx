@@ -13,6 +13,8 @@ export type AuthState = {
 export type AuthContextType = {
   authState: AuthState;
   createUserHandler: (params: CreateAccountInput) => Promise<void>;
+  verifyEmailHandler: (params: string) => Promise<AuthState>;
+  resendVerificationCodeHandler: (params: string) => Promise<Boolean>;
   loginInternal: (params: QueryLoginArgs) => Promise<AuthState>;
   logout: () => void;
   verifyWithSecureStoreJwt: () => Promise<AuthState>;
@@ -38,6 +40,28 @@ const CREATE_USER_QUERY = gql(`
     }
   }
 `);
+
+const VERIFY_EMAIL_QUERY = gql(`
+  mutation VerifyEmail($verificationCode: String!) {
+    verifyEmail(verificationCode: $verificationCode) {
+      id
+      name
+      email
+      avatar
+      createdAt
+      updatedAt
+      active
+      authPlatform
+      authStateId
+    }
+  }
+`);
+
+const RESEND_VERIFICATION_QUERY = gql(`
+  mutation ResendVerification($email: String!) {
+    resendEmailVerificationCode(email: $email)
+  }
+`)
 
 const LOGIN_QUERY = gql(`
   query Login($email: String!, $password: String!) {
@@ -100,6 +124,8 @@ export const AuthContext = createContext<AuthContextType>(
 
 const AuthStore = ({ children }: { children: ReactNode }) => {
   const [createUser] = useMutation(CREATE_USER_QUERY);
+  const [verifyEmail] = useMutation(VERIFY_EMAIL_QUERY);
+  const [resendVerificationCode] = useMutation(RESEND_VERIFICATION_QUERY);
   const [login] = useLazyQuery(LOGIN_QUERY);
   const [me] = useLazyQuery(ME_QUERY);
   const [googleOAuth] = useLazyQuery(GOOGLE_OAUTH_QUERY);
@@ -121,6 +147,19 @@ const AuthStore = ({ children }: { children: ReactNode }) => {
   const createUserHandler = async (createUserInput: CreateAccountInput) => {
     const { data } = await createUser({ variables: createUserInput });
     if (!data) throw 'Error creating new account';
+  };
+
+  const verifyEmailHandler = async (verificationCode: string) => {
+    const { data } = await verifyEmail({ variables: { verificationCode } });
+    if (!data) throw 'Error verifying code';
+    setAuthState({ user: data.verifyEmail, ...authState });
+    return authState;
+  };
+
+  const resendVerificationCodeHandler = async (email: string) => {
+    const { data } = await resendVerificationCode({ variables: { email }})
+    if (!data) throw 'Error resending verification code';
+    return data.resendEmailVerificationCode;
   }
 
   const loginInternal = async (loginArgs: QueryLoginArgs) => {
@@ -165,7 +204,15 @@ const AuthStore = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ authState,  createUserHandler, loginInternal, logout, verifyWithSecureStoreJwt }}
+      value={{
+        authState,
+        createUserHandler,
+        verifyEmailHandler,
+        resendVerificationCodeHandler,
+        loginInternal,
+        logout,
+        verifyWithSecureStoreJwt,
+      }}
     >
       {children}
     </AuthContext.Provider>

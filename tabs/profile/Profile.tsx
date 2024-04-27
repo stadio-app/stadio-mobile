@@ -15,7 +15,7 @@ export function Profile({ navigation }: Props) {
 
   const handleLogout = () => {
     logout();
-    navigation.navigate('MainMenu');
+    navigation.navigate('Login');
   };
   return (
     <SafeAreaView>

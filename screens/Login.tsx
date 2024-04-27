@@ -19,7 +19,6 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 export function LoginScreen({ navigation }: Props) {
   const [createAccount, setCreateAccount] = useState(false);
-  const [createAccountSuccess, setCreateAccountSuccess] = useState(false);
   const [error, setError] = useState<ApolloError>();
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
@@ -30,23 +29,36 @@ export function LoginScreen({ navigation }: Props) {
   const handleLogin = () => {
     setLoading(true);
     loginInternal({ email, password })
-      .then(() => {
-        navigation.navigate('MainMenu');
+      .then((newAuthState) => {
+        navigation.navigate(newAuthState.user?.active ? 'MainMenu' : 'EmailVerification');
       })
-      .catch((error) => { setError(error); alert(error); })
+      .catch((error) => {
+        setError(error);
+        alert(error);
+      })
       .finally(() => setLoading(false));
   };
 
   const handleSignup = () => {
     setLoading(true);
     createUserHandler({ email, name, password })
-    .then(() => {
-      alert('Account created successfully!');
-      setCreateAccount(false);
-      setCreateAccountSuccess(true);
-    }).catch((error) => { setError(error); alert(error); })
-    .finally(() => setLoading(false));
-  }
+      .then(() => {
+        alert('Account created successfully!');
+        navigation.navigate('EmailVerification');
+      })
+      .catch((error) => {
+        setError(error);
+        alert(error);
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const handleCreateAccountClick = () => {
+    setCreateAccount(!createAccount);
+    setName('');
+    setEmail('');
+    setPassword('');
+  };
 
   return (
     <SafeAreaView style={{ backgroundColor: '#10454f', height: '100%' }}>
@@ -57,8 +69,7 @@ export function LoginScreen({ navigation }: Props) {
         ></Image>
 
         <View style={{ gap: 20, width: '100%' }}>
-          {
-            createAccount &&
+          {createAccount && (
             <TextInput
               style={styles.input}
               onChangeText={setName}
@@ -69,7 +80,7 @@ export function LoginScreen({ navigation }: Props) {
               autoComplete="name"
               editable={!loading}
             />
-          }
+          )}
 
           <TextInput
             style={styles.input}
@@ -115,17 +126,27 @@ export function LoginScreen({ navigation }: Props) {
           >
             <Button
               color={Platform.OS === 'android' ? '#00343e' : '#fff'}
-              title={createAccount ? (loading ? 'Signing up' : 'Sign up') : (loading ? 'Logging in' : 'Login')}
+              title={
+                createAccount
+                  ? loading
+                    ? 'Signing up'
+                    : 'Sign up'
+                  : loading
+                    ? 'Logging in'
+                    : 'Login'
+              }
               onPress={createAccount ? handleSignup : handleLogin}
               disabled={loading}
             />
           </View>
-          {
-            !createAccountSuccess &&
-            <Text style={{color: 'white', alignSelf: 'center'}} onPress={() => setCreateAccount(!createAccount)}>
-              {!createAccount ? 'Creating a new account?' : 'Already have an account? Login'}
-            </Text>
-          }
+          <Text
+            style={{ color: 'white', alignSelf: 'center' }}
+            onPress={() => handleCreateAccountClick()}
+          >
+            {!createAccount
+              ? 'Creating a new account?'
+              : 'Already have an account? Login'}
+          </Text>
         </View>
       </View>
     </SafeAreaView>
