@@ -1,21 +1,14 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { IconProps } from '@expo/vector-icons/build/createIconSet';
 import { Ionicons } from '@expo/vector-icons';
 
-import { RootStackParamList } from '../types/RootStackParamList';
 import * as Tabs from '../tabs/tabs';
-import { AuthContext } from '../store/AuthStore';
 
 const Tab = createBottomTabNavigator();
 
-type Props = NativeStackScreenProps<RootStackParamList, 'MainMenu'>;
-
-export function MainMenu({ navigation }: Props) {
-  const { authState } = useContext(AuthContext);
-
+export function MainMenu() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
