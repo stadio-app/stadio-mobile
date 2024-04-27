@@ -12,12 +12,8 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "plugins": [
-      "expo-secure-store"
-    ],
+    "assetBundlePatterns": ["**/*"],
+    "plugins": ["expo-secure-store"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.stadioapp.stadiomobile",

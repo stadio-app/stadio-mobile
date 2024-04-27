@@ -1,3 +1,3 @@
 export type EventsListItemType = {
-  id: string
-}
+  id: string;
+};
