@@ -1,5 +1,10 @@
 import { ReactNode, createContext, useState } from 'react';
-import { Auth, CreateAccountInput, QueryLoginArgs, User } from '../generated/graphql';
+import {
+  Auth,
+  CreateAccountInput,
+  QueryLoginArgs,
+  User,
+} from '../generated/graphql';
 import * as SecureStore from 'expo-secure-store';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { gql } from '../generated';
@@ -61,7 +66,7 @@ const RESEND_VERIFICATION_QUERY = gql(`
   mutation ResendVerification($email: String!) {
     resendEmailVerificationCode(email: $email)
   }
-`)
+`);
 
 const LOGIN_QUERY = gql(`
   query Login($email: String!, $password: String!) {
@@ -157,10 +162,10 @@ const AuthStore = ({ children }: { children: ReactNode }) => {
   };
 
   const resendVerificationCodeHandler = async (email: string) => {
-    const { data } = await resendVerificationCode({ variables: { email }})
+    const { data } = await resendVerificationCode({ variables: { email } });
     if (!data) throw 'Error resending verification code';
     return data.resendEmailVerificationCode;
-  }
+  };
 
   const loginInternal = async (loginArgs: QueryLoginArgs) => {
     const { data, error } = await login({ variables: loginArgs });

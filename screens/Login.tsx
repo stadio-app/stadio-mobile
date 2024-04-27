@@ -29,7 +29,9 @@ export function LoginScreen({ navigation }: Props) {
     setLoading(true);
     loginInternal({ email, password })
       .then((newAuthState) => {
-        navigation.navigate(newAuthState.user?.active ? 'MainMenu' : 'EmailVerification');
+        navigation.navigate(
+          newAuthState.user?.active ? 'MainMenu' : 'EmailVerification'
+        );
       })
       .catch((error) => {
         setError(error);

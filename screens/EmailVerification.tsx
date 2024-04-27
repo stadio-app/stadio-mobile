@@ -19,7 +19,12 @@ export function EmailVerification({ navigation }: Props) {
   const [verificationCode, setVerificationCode] = useState('');
   const [error, setError] = useState<ApolloError>();
   const [loading, setLoading] = useState(false);
-  const { authState, verifyEmailHandler, resendVerificationCodeHandler, logout } = React.useContext(AuthContext);
+  const {
+    authState,
+    verifyEmailHandler,
+    resendVerificationCodeHandler,
+    logout,
+  } = React.useContext(AuthContext);
 
   const verifyCode = () => {
     setLoading(true);
@@ -41,12 +46,12 @@ export function EmailVerification({ navigation }: Props) {
       logout();
       return;
     }
-    resendVerificationCodeHandler((email))
-    .catch((error) => {
-      setError(error);
-    })
-    .finally(() => setLoading(false));
-  }
+    resendVerificationCodeHandler(email)
+      .catch((error) => {
+        setError(error);
+      })
+      .finally(() => setLoading(false));
+  };
 
   return (
     <SafeAreaView style={{ backgroundColor: '#10454f', height: '100%' }}>
@@ -73,7 +78,13 @@ export function EmailVerification({ navigation }: Props) {
             editable={!loading}
           />
           {error && (
-            <View style={{ height: 20, justifyContent: 'center', alignSelf: 'center' }}>
+            <View
+              style={{
+                height: 20,
+                justifyContent: 'center',
+                alignSelf: 'center',
+              }}
+            >
               <Text style={{ color: '#fff', opacity: 0.5 }}>
                 {error.message}
               </Text>
@@ -95,7 +106,6 @@ export function EmailVerification({ navigation }: Props) {
               onPress={() => verifyCode()}
               disabled={loading}
             />
-
           </View>
           <View
             style={{
@@ -105,7 +115,7 @@ export function EmailVerification({ navigation }: Props) {
               justifyContent: 'center',
               width: '60%',
               alignSelf: 'center',
-              marginTop: -25
+              marginTop: -25,
             }}
           >
             <Button
