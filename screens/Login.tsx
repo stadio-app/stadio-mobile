@@ -9,7 +9,6 @@ import {
   Button,
   SafeAreaView,
   Text,
-  Alert,
 } from 'react-native';
 import { RootStackParamList } from '../types/RootStackParamList';
 import { AuthContext } from '../store/AuthStore';
@@ -73,6 +72,7 @@ export function LoginScreen({ navigation }: Props) {
             <TextInput
               style={styles.input}
               onChangeText={setName}
+              value={name}
               placeholder="Name"
               autoCapitalize="words"
               textContentType="none"
@@ -85,6 +85,7 @@ export function LoginScreen({ navigation }: Props) {
           <TextInput
             style={styles.input}
             onChangeText={setEmail}
+            value={email}
             placeholder="Email"
             autoCapitalize="none"
             textContentType="emailAddress"
@@ -97,6 +98,7 @@ export function LoginScreen({ navigation }: Props) {
           <TextInput
             style={styles.input}
             onChangeText={setPassword}
+            value={password}
             placeholder="Password"
             textContentType="password"
             autoCapitalize="none"
