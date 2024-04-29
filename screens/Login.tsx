@@ -17,20 +17,48 @@ import { ApolloError } from '@apollo/client';
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 export function LoginScreen({ navigation }: Props) {
+  const [createAccount, setCreateAccount] = useState(false);
   const [error, setError] = useState<ApolloError>();
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { loginInternal } = React.useContext(AuthContext);
+  const { loginInternal, createUserHandler } = React.useContext(AuthContext);
 
   const handleLogin = () => {
     setLoading(true);
     loginInternal({ email, password })
-      .then(() => {
-        navigation.navigate('MainMenu');
+      .then((newAuthState) => {
+        navigation.navigate(
+          newAuthState.user?.active ? 'MainMenu' : 'EmailVerification'
+        );
       })
-      .catch((error) => setError(error))
+      .catch((error) => {
+        setError(error);
+        alert(error);
+      })
       .finally(() => setLoading(false));
+  };
+
+  const handleSignup = () => {
+    setLoading(true);
+    createUserHandler({ email, name, password })
+      .then(() => {
+        alert('Account created successfully!');
+        navigation.navigate('EmailVerification');
+      })
+      .catch((error) => {
+        setError(error);
+        alert(error);
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const handleCreateAccountClick = () => {
+    setCreateAccount(!createAccount);
+    setName('');
+    setEmail('');
+    setPassword('');
   };
 
   return (
@@ -42,9 +70,24 @@ export function LoginScreen({ navigation }: Props) {
         ></Image>
 
         <View style={{ gap: 20, width: '100%' }}>
+          {createAccount && (
+            <TextInput
+              style={styles.input}
+              onChangeText={setName}
+              value={name}
+              placeholder="Name"
+              autoCapitalize="words"
+              textContentType="none"
+              autoCorrect={true}
+              autoComplete="name"
+              editable={!loading}
+            />
+          )}
+
           <TextInput
             style={styles.input}
             onChangeText={setEmail}
+            value={email}
             placeholder="Email"
             autoCapitalize="none"
             textContentType="emailAddress"
@@ -57,6 +100,7 @@ export function LoginScreen({ navigation }: Props) {
           <TextInput
             style={styles.input}
             onChangeText={setPassword}
+            value={password}
             placeholder="Password"
             textContentType="password"
             autoCapitalize="none"
@@ -86,11 +130,27 @@ export function LoginScreen({ navigation }: Props) {
           >
             <Button
               color={Platform.OS === 'android' ? '#00343e' : '#fff'}
-              title={loading ? 'Logging in' : 'Login'}
-              onPress={handleLogin}
+              title={
+                createAccount
+                  ? loading
+                    ? 'Signing up'
+                    : 'Sign up'
+                  : loading
+                    ? 'Logging in'
+                    : 'Login'
+              }
+              onPress={createAccount ? handleSignup : handleLogin}
               disabled={loading}
             />
           </View>
+          <Text
+            style={{ color: 'white', alignSelf: 'center' }}
+            onPress={() => handleCreateAccountClick()}
+          >
+            {!createAccount
+              ? 'Creating a new account?'
+              : 'Already have an account? Login'}
+          </Text>
         </View>
       </View>
     </SafeAreaView>
@@ -105,8 +165,8 @@ const styles = StyleSheet.create({
   },
   logo: {
     resizeMode: 'contain',
-    height: '50%',
-    width: '50%',
+    height: '40%',
+    width: '60%',
   },
   input: {
     height: 50,

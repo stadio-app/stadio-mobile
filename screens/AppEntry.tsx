@@ -48,25 +48,35 @@ export default function AppEntry() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={authState.isLoggedIn ? 'MainMenu' : 'Login'}
+        initialRouteName={
+          authState.isLoggedIn
+            ? authState.user?.active
+              ? 'MainMenu'
+              : 'EmailVerification'
+            : 'Login'
+        }
       >
-        {authState.isLoggedIn ? (
-          <Stack.Screen
-            name="MainMenu"
-            component={Screens.MainMenu}
-            options={{
-              headerShown: false,
-            }}
-          />
-        ) : (
-          <Stack.Screen
-            name="Login"
-            component={Screens.LoginScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-        )}
+        <Stack.Screen
+          name="MainMenu"
+          component={Screens.MainMenu}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Screens.LoginScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="EmailVerification"
+          component={Screens.EmailVerification}
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
