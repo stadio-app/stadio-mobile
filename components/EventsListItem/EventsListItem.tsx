@@ -10,6 +10,7 @@ import { Avatar } from '@rneui/base';
 import { ListItemChevron } from '@rneui/base/dist/ListItem/ListItem.Chevron';
 import { Event } from '../../generated/graphql';
 import dayjs from 'dayjs';
+import { cloudinaryFileUrl } from '../../utils/strings';
 
 export type EventListItemProps = {
   event: Event;
@@ -20,13 +21,19 @@ export default function EventsListItem({ event }: EventListItemProps) {
   const IconView = ({ children }: PropsWithChildren<{}>) => {
     return <View style={styles.iconView}>{children}</View>;
   };
+  const defaultImage = event.location?.locationImages?.find((v) => v.default)!;
   return (
     <View key={event.id} style={styles.listItem}>
       {(parseInt(event.id) === 1 || parseInt(event.id) % 3 == 0) && (
         <Text style={styles.listItem.header}>Today</Text>
       )}
       <ListItem bottomDivider>
-        <Avatar size={100} source={require('../../assets/icon.png')} />
+        <Avatar
+          size={100}
+          source={{
+            uri: cloudinaryFileUrl(defaultImage.uploadId),
+          }}
+        />
         <ListItem.Content>
           <ListItem.Title>{event.location?.name}</ListItem.Title>
           <ListItem.Subtitle style={styles.contentGrid}>
