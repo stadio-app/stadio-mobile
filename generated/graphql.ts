@@ -13,6 +13,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   Time: any;
+  Upload: any;
 };
 
 export type Address = {
@@ -100,10 +101,17 @@ export type CreateEvent = {
 export type CreateLocation = {
   address: CreateAddress;
   description?: InputMaybe<Scalars['String']>;
+  images: Array<CreateLocationImage>;
   instances: Array<CreateLocationInstance>;
   name: Scalars['String'];
   schedule: Array<CreateLocationSchedule>;
   type: Scalars['String'];
+};
+
+export type CreateLocationImage = {
+  caption?: InputMaybe<Scalars['String']>;
+  default: Scalars['Boolean'];
+  image: Scalars['Upload'];
 };
 
 export type CreateLocationInstance = {
@@ -183,6 +191,7 @@ export type Location = {
   deleted: Scalars['Boolean'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  locationImages: Array<LocationImage>;
   locationInstances: Array<LocationInstance>;
   locationSchedule: Array<LocationSchedule>;
   name: Scalars['String'];
@@ -193,6 +202,15 @@ export type Location = {
   updatedAt: Scalars['Time'];
   updatedBy?: Maybe<UpdatedByUser>;
   updatedById?: Maybe<Scalars['ID']>;
+};
+
+export type LocationImage = {
+  __typename?: 'LocationImage';
+  caption?: Maybe<Scalars['String']>;
+  default: Scalars['Boolean'];
+  id: Scalars['ID'];
+  originalFilename: Scalars['String'];
+  uploadId: Scalars['String'];
 };
 
 export type LocationInstance = {
@@ -220,6 +238,8 @@ export type Mutation = {
   createAccount: User;
   createEvent: EventShallow;
   createLocation: Location;
+  resendEmailVerificationCode: Scalars['Boolean'];
+  verifyEmail: User;
 };
 
 
@@ -235,6 +255,16 @@ export type MutationCreateEventArgs = {
 
 export type MutationCreateLocationArgs = {
   input: CreateLocation;
+};
+
+
+export type MutationResendEmailVerificationCodeArgs = {
+  email: Scalars['String'];
+};
+
+
+export type MutationVerifyEmailArgs = {
+  verificationCode: Scalars['String'];
 };
 
 export type Owner = {
@@ -268,11 +298,13 @@ export type QueryAllEventsArgs = {
 
 export type QueryGoogleOAuthArgs = {
   accessToken: Scalars['String'];
+  ipAddress?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryLoginArgs = {
   email: Scalars['String'];
+  ipAddress?: InputMaybe<Scalars['String']>;
   password: Scalars['String'];
 };
 
@@ -287,8 +319,8 @@ export type UpdatedByUser = {
 export type User = {
   __typename?: 'User';
   active: Scalars['Boolean'];
-  authPlatform: AuthPlatformType;
-  authStateId: Scalars['ID'];
+  authPlatform?: Maybe<AuthPlatformType>;
+  authStateId?: Maybe<Scalars['ID']>;
   avatar?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
   birthDate?: Maybe<Scalars['Time']>;
@@ -324,19 +356,19 @@ export type LoginQueryVariables = Exact<{
 }>;
 
 
-export type LoginQuery = { __typename?: 'Query', login: { __typename?: 'Auth', token: string, user: { __typename?: 'User', id: string, name: string, email: string, avatar?: string | null, createdAt: any, updatedAt: any, active: boolean, authPlatform: AuthPlatformType, authStateId: string } } };
+export type LoginQuery = { __typename?: 'Query', login: { __typename?: 'Auth', token: string, user: { __typename?: 'User', id: string, name: string, email: string, avatar?: string | null, createdAt: any, updatedAt: any, active: boolean, authPlatform?: AuthPlatformType | null, authStateId?: string | null } } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, name: string, email: string, avatar?: string | null, createdAt: any, updatedAt: any, active: boolean, authPlatform: AuthPlatformType, authStateId: string } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, name: string, email: string, avatar?: string | null, createdAt: any, updatedAt: any, active: boolean, authPlatform?: AuthPlatformType | null, authStateId?: string | null } };
 
 export type GoogleOauthQueryVariables = Exact<{
   accessToken: Scalars['String'];
 }>;
 
 
-export type GoogleOauthQuery = { __typename?: 'Query', googleOAuth: { __typename?: 'Auth', token: string, isNewUser?: boolean | null, user: { __typename?: 'User', id: string, name: string, email: string, avatar?: string | null, createdAt: any, updatedAt: any, active: boolean, authPlatform: AuthPlatformType, authStateId: string } } };
+export type GoogleOauthQuery = { __typename?: 'Query', googleOAuth: { __typename?: 'Auth', token: string, isNewUser?: boolean | null, user: { __typename?: 'User', id: string, name: string, email: string, avatar?: string | null, createdAt: any, updatedAt: any, active: boolean, authPlatform?: AuthPlatformType | null, authStateId?: string | null } } };
 
 export type EventsQueryVariables = Exact<{
   filters: AllEventsFilter;
