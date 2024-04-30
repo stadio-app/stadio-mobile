@@ -48,16 +48,19 @@ const ALL_EVENTS = gql(`
 export function Explore() {
   const { authState } = useContext(AuthContext);
   const [search, setSearch] = useState('');
+  const [radius, setRadius] = useState(5000);
+  const [latitude, setLatitude] = useState(41.8823144);
+  const [longitude, setLongitude] = useState(-87.6346181);
   const { data, loading, error } = useQuery<EventsQuery, EventsQueryVariables>(
     ALL_EVENTS,
     {
       context: { headers: { authorization: `Bearer ${authState.token}` } },
       variables: {
         filters: {
-          radiusMeters: 6_000_000,
+          radiusMeters: radius,
           countryCode: 'US',
-          latitude: 41.8823144, // See https://docs.expo.dev/versions/latest/sdk/location/ to get user's geolocation
-          longitude: -87.6346181,
+          latitude: latitude, // See https://docs.expo.dev/versions/latest/sdk/location/ to get user's geolocation
+          longitude: longitude,
           endDate: '2024-06-01T00:00:00.674Z',
           startDate: '2024-01-01T00:00:00.674Z',
         },
@@ -65,9 +68,7 @@ export function Explore() {
     }
   );
 
-  if (data) {
-    console.log(data.allEvents);
-  }
+  if (data) console.log(data.allEvents);
 
   return (
     <SafeAreaView style={{ backgroundColor: '#10454f' }}>
