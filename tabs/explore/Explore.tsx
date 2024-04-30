@@ -76,6 +76,7 @@ export function Explore() {
           <Text style={styles.subheader}>Discover</Text>
           <Text style={styles.title}>Pick-up Games</Text>
         </View>
+
         <SearchBar
           placeholder="Explore pick up games"
           onChangeText={(value) => setSearch(value)}
@@ -96,9 +97,18 @@ export function Explore() {
           showCancel={false}
           cancelButtonTitle=""
         />
-        <ScrollView>
-          {data ? <EventsList events={data.allEvents} /> : <></>}
-        </ScrollView>
+
+        {loading && (
+          <Text style={{ textAlign: 'center' }}>Loading events...</Text>
+        )}
+
+        {data && (
+          <ScrollView>
+            <EventsList events={data.allEvents} />
+          </ScrollView>
+        )}
+
+        {error && <Text>Failed to load events. {error.message}</Text>}
       </View>
     </SafeAreaView>
   );
