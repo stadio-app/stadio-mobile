@@ -8,14 +8,13 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { SearchBar } from '@rneui/themed';
-import { persons } from './temp_data';
-import EventsListItem from '../../components/EventsListItem/EventsListItem';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuery } from '@apollo/client';
 import { EventsQuery, EventsQueryVariables } from '../../generated/graphql';
 import { gql } from '../../generated';
 import { EventsList } from './EventsList';
 import { AuthContext } from '../../store/AuthStore';
+import dayjs from 'dayjs';
 
 const ALL_EVENTS = gql(`
   query Events($filters: AllEventsFilter!) {
@@ -45,6 +44,12 @@ const ALL_EVENTS = gql(`
   }
 `);
 
+type AllEvents = EventsQuery['allEvents'];
+export type GroupedEvents = {
+  label: string;
+  events: AllEvents;
+};
+
 export function Explore() {
   const { authState } = useContext(AuthContext);
   const [search, setSearch] = useState('');
@@ -67,6 +72,34 @@ export function Explore() {
       },
     }
   );
+
+  function dateGroupedData(events: AllEvents): GroupedEvents[] {
+    const result = new Map<string, AllEvents>();
+    const today = dayjs(new Date());
+    for (let event of events) {
+      const eventDate = dayjs(event.startDate);
+      let key = 'Upcoming';
+
+      if (eventDate.diff(today, 'day') === 0) {
+        key = 'Today';
+      } else if (eventDate.diff(today, 'day') === 1) {
+        key = 'Tomorrow';
+      } else if (eventDate.diff(today, 'week') === 0) {
+        key = 'This Week';
+      } else if (eventDate.diff(today, 'week') === 1) {
+        key = 'Next Week';
+      }
+
+      const val = result.get(key);
+      if (val) val.push(event);
+      else result.set(key, [event]);
+    }
+
+    return Object.entries(result).map<GroupedEvents>(([label, events]) => ({
+      label,
+      events,
+    }));
+  }
 
   if (data) console.log(data.allEvents);
 
@@ -105,7 +138,7 @@ export function Explore() {
 
         {data && (
           <ScrollView>
-            <EventsList events={data.allEvents} />
+            <EventsList groupedEvents={dateGroupedData(data.allEvents)} />
           </ScrollView>
         )}
 

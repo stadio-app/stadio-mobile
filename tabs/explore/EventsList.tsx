@@ -1,17 +1,37 @@
-import { View } from 'react-native';
-import { Event, EventsQuery } from '../../generated/graphql';
+import { View, Text, StyleSheet } from 'react-native';
+import { Event } from '../../generated/graphql';
 import EventsListItem from '../../components/EventsListItem/EventsListItem';
+import { GroupedEvents } from './Explore';
 
 export type EventsListProps = {
-  events: EventsQuery['allEvents'];
+  groupedEvents: GroupedEvents[];
 };
 
-export function EventsList({ events }: EventsListProps) {
+export function EventsList({ groupedEvents }: EventsListProps) {
   return (
     <View>
-      {events.map((e) => (
-        <EventsListItem event={e as Event} key={e.id} />
+      {groupedEvents.map(({ label, events }) => (
+        <View style={styles.listItem}>
+          <Text style={styles.listItem.header}>{label}</Text>
+
+          {events.map((e) => (
+            <EventsListItem event={e as Event} key={e.id} />
+          ))}
+        </View>
       ))}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  listItem: {
+    margin: 0,
+    header: {
+      fontSize: 20,
+      color: '#10454f',
+      paddingLeft: 10,
+      paddingRight: 10,
+      marginTop: 20,
+    },
+  },
+});
