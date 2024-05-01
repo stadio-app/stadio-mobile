@@ -21,6 +21,7 @@ export type AuthContextType = {
   verifyEmailHandler: (params: string) => Promise<AuthState>;
   resendVerificationCodeHandler: (params: string) => Promise<Boolean>;
   loginInternal: (params: QueryLoginArgs) => Promise<AuthState>;
+  loginGoogle: (params: string) => Promise<AuthState>;
   logout: () => void;
   verifyWithSecureStoreJwt: () => Promise<AuthState>;
 };
@@ -215,6 +216,7 @@ const AuthStore = ({ children }: { children: ReactNode }) => {
         verifyEmailHandler,
         resendVerificationCodeHandler,
         loginInternal,
+        loginGoogle,
         logout,
         verifyWithSecureStoreJwt,
       }}
