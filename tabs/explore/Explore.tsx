@@ -95,13 +95,11 @@ export function Explore() {
       else result.set(key, [event]);
     }
 
-    return Object.entries(result).map<GroupedEvents>(([label, events]) => ({
+    return Array.from(result.entries()).map<GroupedEvents>(([label, events]) => ({
       label,
-      events,
+      events
     }));
   }
-
-  if (data) console.log(data.allEvents);
 
   return (
     <SafeAreaView style={{ backgroundColor: '#10454f' }}>

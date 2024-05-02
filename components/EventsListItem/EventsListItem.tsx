@@ -27,7 +27,8 @@ export default function EventsListItem({ event }: EventListItemProps) {
       <Avatar
         size={100}
         source={{
-          uri: cloudinaryFileUrl(defaultImage.uploadId),
+          // uri: cloudinaryFileUrl(defaultImage.uploadId),
+          uri: "https://worldwideinterweb.com/wp-content/uploads/2017/10/weird20monkey20photo.png"
         }}
       />
       <ListItem.Content>
@@ -38,12 +39,12 @@ export default function EventsListItem({ event }: EventListItemProps) {
               <EvilIcons name="location" />
               <Text>{event.location?.address?.fullAddress}</Text>
             </IconView>
-            <IconView>
+          </View>
+          <View style={{display: 'flex', flexDirection: 'row', columnGap: 5}}>
+          <IconView>
               <Ionicons name="time-outline" />
               <Text>{dayjs(event.startDate).format('h:mm A')}</Text>
             </IconView>
-          </View>
-          <View>
             <IconView>
               <Ionicons name="people" />
               <Text>10/15</Text>
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: 4,
     marginTop: 5,
     marginLeft: 5,
   },
