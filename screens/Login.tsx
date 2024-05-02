@@ -13,37 +13,11 @@ import {
 import { RootStackParamList } from '../types/RootStackParamList';
 import { AuthContext } from '../store/AuthStore';
 import { ApolloError } from '@apollo/client';
-import * as Google from 'expo-auth-session/providers/google';
-import { AppOwnership } from 'expo-constants';
-import NativeConstants from 'expo-constants';
-import { makeRedirectUri } from 'expo-auth-session';
-import * as WebBrowser from 'expo-web-browser';
 import { SocialIcon } from '@rneui/themed';
-import { Divider, ListItem } from '@rneui/base';
+import { Divider } from '@rneui/base';
+import * as Google from 'expo-auth-session/providers/google';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
-type GoogleUser = {
-  email: string;
-  name: string;
-};
-
-// const GOOGLE_CONFIG: Partial<Google.GoogleAuthRequestConfig> =
-
-//expo go 282945859510-qtn9udln341k9qo4gdjbnj2ugmfvqn3q.apps.googleusercontent.com
-
-const EXPO_REDIRECT_PARAMS = {
-  // useProxy: true,
-  // projectNameForProxy: `@stadio/stadiomobile`
-  scheme: 'stadiomobile',
-};
-
-const NATIVE_REDIRECT_PARAMS = { native: 'stadiomobile://' };
-const REDIRECT_PARAMS =
-  NativeConstants.appOwnership === AppOwnership.Expo
-    ? EXPO_REDIRECT_PARAMS
-    : NATIVE_REDIRECT_PARAMS;
-
-WebBrowser.maybeCompleteAuthSession();
 
 export function LoginScreen({ navigation }: Props) {
   const [createAccount, setCreateAccount] = useState(false);
@@ -91,7 +65,6 @@ export function LoginScreen({ navigation }: Props) {
 
   const handleGoogleLogin = async () => {
     const token = response?.authentication.accessToken;
-    console.log(token);
     if (token) {
       loginGoogle(token)
         .then((newAuthState) => {
@@ -129,18 +102,9 @@ export function LoginScreen({ navigation }: Props) {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#10454f', height: '100%' }}>
-      <View
-        style={{
-          ...styles.container,
-          paddingHorizontal: 30,
-          paddingTop: 70,
-          gap: 20,
-        }}
-      >
-        <Text style={{ fontSize: 50, color: 'white', alignSelf: 'flex-start' }}>
-          Welcome to
-        </Text>
+    <SafeAreaView style={styles.view}>
+      <View style={styles.container}>
+        <Text style={styles.welcomeText}>Welcome to</Text>
         <Image
           source={require('../assets/logo-base.png')}
           style={styles.logo}
@@ -197,14 +161,7 @@ export function LoginScreen({ navigation }: Props) {
             )}
           </View>
 
-          <View
-            style={{
-              backgroundColor: '#00343e',
-              borderRadius: 25,
-              height: 50,
-              justifyContent: 'center',
-            }}
-          >
+          <View style={styles.loginButton}>
             <Button
               color={Platform.OS === 'android' ? '#00343e' : '#fff'}
               title={
@@ -221,14 +178,7 @@ export function LoginScreen({ navigation }: Props) {
             />
           </View>
 
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              marginLeft: -15,
-            }}
-          >
+          <View style={styles.socialButtons}>
             <SocialIcon
               type="google"
               iconType="ant-design"
@@ -256,11 +206,16 @@ export function LoginScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
+  view: { backgroundColor: '#10454f', height: '100%' },
   container: {
     backgroundColor: '#10454f',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 30,
+    paddingTop: 70,
+    gap: 20,
   },
+  welcomeText: { fontSize: 50, color: 'white', alignSelf: 'flex-start' },
   logo: {
     resizeMode: 'contain',
     height: '15%',
@@ -277,22 +232,16 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 15,
   },
-  appleButton: {
-    height: 50,
-    width: 250,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  googleButton: {
-    height: 50,
-    width: 250,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   loginButton: {
-    backgroundColor: '#333',
-    color: '#fff',
+    backgroundColor: '#00343e',
+    borderRadius: 25,
+    height: 50,
+    justifyContent: 'center',
+  },
+  socialButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginLeft: -15,
   },
 });
