@@ -1,6 +1,7 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { resolveApiUrl } from '../utils/UrlUtils';
 
 export const apolloClient = new ApolloClient({
-  uri: process.env.EXPO_PUBLIC_API_GQL_URL ?? 'http://localhost:8080/graphql',
+  uri: `${resolveApiUrl()}/graphql`,
   cache: new InMemoryCache(),
 });

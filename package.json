@@ -5,7 +5,7 @@
   "scripts": {
     "codegen": "graphql-codegen --config ./apollo/codegen.ts",
     "codegen:watch": "graphql-codegen --config ./apollo/codegen.ts --watch",
-    "start": "npm run codegen && expo start --clear --https",
+    "start": "export $(cat .env | xargs) && npm run codegen && expo start --clear --https",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web"
