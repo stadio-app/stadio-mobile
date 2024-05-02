@@ -13,6 +13,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   Time: any;
+  Upload: any;
 };
 
 export type Address = {
@@ -100,10 +101,17 @@ export type CreateEvent = {
 export type CreateLocation = {
   address: CreateAddress;
   description?: InputMaybe<Scalars['String']>;
+  images: Array<CreateLocationImage>;
   instances: Array<CreateLocationInstance>;
   name: Scalars['String'];
   schedule: Array<CreateLocationSchedule>;
   type: Scalars['String'];
+};
+
+export type CreateLocationImage = {
+  caption?: InputMaybe<Scalars['String']>;
+  default: Scalars['Boolean'];
+  image: Scalars['Upload'];
 };
 
 export type CreateLocationInstance = {
@@ -183,6 +191,7 @@ export type Location = {
   deleted: Scalars['Boolean'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  locationImages: Array<LocationImage>;
   locationInstances: Array<LocationInstance>;
   locationSchedule: Array<LocationSchedule>;
   name: Scalars['String'];
@@ -193,6 +202,15 @@ export type Location = {
   updatedAt: Scalars['Time'];
   updatedBy?: Maybe<UpdatedByUser>;
   updatedById?: Maybe<Scalars['ID']>;
+};
+
+export type LocationImage = {
+  __typename?: 'LocationImage';
+  caption?: Maybe<Scalars['String']>;
+  default: Scalars['Boolean'];
+  id: Scalars['ID'];
+  originalFilename: Scalars['String'];
+  uploadId: Scalars['String'];
 };
 
 export type LocationInstance = {
@@ -221,6 +239,7 @@ export type Mutation = {
   createEvent: EventShallow;
   createLocation: Location;
   resendEmailVerificationCode: Scalars['Boolean'];
+  updateProfile: User;
   verifyEmail: User;
 };
 
@@ -242,6 +261,11 @@ export type MutationCreateLocationArgs = {
 
 export type MutationResendEmailVerificationCodeArgs = {
   email: Scalars['String'];
+};
+
+
+export type MutationUpdateProfileArgs = {
+  input: UpdateUser;
 };
 
 
@@ -288,6 +312,13 @@ export type QueryLoginArgs = {
   email: Scalars['String'];
   ipAddress?: InputMaybe<Scalars['String']>;
   password: Scalars['String'];
+};
+
+export type UpdateUser = {
+  avatar?: InputMaybe<Scalars['Upload']>;
+  bio?: InputMaybe<Scalars['String']>;
+  birthDate?: InputMaybe<Scalars['Time']>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdatedByUser = {
