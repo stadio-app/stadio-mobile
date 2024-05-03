@@ -136,17 +136,21 @@ export function Explore() {
           cancelButtonTitle=""
         />
 
-        {loading && (
-          <Text style={{ textAlign: 'center' }}>Loading events...</Text>
-        )}
+        {loading && <Text style={styles.messageLabel}>Loading events...</Text>}
 
-        {data && (
+        {!loading && data && data.allEvents.length > 0 ? (
           <ScrollView>
             <EventsList groupedEvents={dateGroupedData(data.allEvents)} />
           </ScrollView>
+        ) : (
+          <Text style={styles.messageLabel}>No events found</Text>
         )}
 
-        {error && <Text>Failed to load events. {error.message}</Text>}
+        {!loading && error && (
+          <Text style={styles.messageLabel}>
+            Failed to load events. {error.message}
+          </Text>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -170,5 +174,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 40,
     color: '#BDE038',
+  },
+  messageLabel: {
+    textAlign: 'center',
+    paddingVertical: 30,
   },
 });
