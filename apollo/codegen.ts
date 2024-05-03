@@ -1,8 +1,8 @@
 import { CodegenConfig } from '@graphql-codegen/cli';
+import { resolveApiUrl } from '../utils/UrlUtils';
 
 const config: CodegenConfig = {
-  schema:
-    process.env.EXPO_PUBLIC_API_GQL_URL ?? 'http://localhost:8080/graphql',
+  schema: `${resolveApiUrl()}/graphql`,
   documents: ['**/*.tsx', '!node_modules/**/*.tsx'],
   generates: {
     './generated/': {
