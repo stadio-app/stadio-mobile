@@ -21,16 +21,17 @@ export default function EventsListItem({ event }: EventListItemProps) {
   const IconView = ({ children }: PropsWithChildren<{}>) => {
     return <View style={styles.iconView}>{children}</View>;
   };
-  const defaultImage = event.location?.locationImages?.find((v) => v.default)!;
+  const defaultImage = event.location?.locationImages?.find((v) => v.default);
   return (
     <ListItem bottomDivider>
-      <Avatar
-        size={100}
-        source={{
-          // uri: cloudinaryFileUrl(defaultImage.uploadId),
-          uri: "https://worldwideinterweb.com/wp-content/uploads/2017/10/weird20monkey20photo.png"
-        }}
-      />
+      {defaultImage && (
+        <Avatar
+          size={100}
+          source={{
+            uri: cloudinaryFileUrl(defaultImage.uploadId),
+          }}
+        />
+      )}
       <ListItem.Content>
         <ListItem.Title>{event.location?.name}</ListItem.Title>
         <ListItem.Subtitle style={styles.contentGrid}>
@@ -40,8 +41,8 @@ export default function EventsListItem({ event }: EventListItemProps) {
               <Text>{event.location?.address?.fullAddress}</Text>
             </IconView>
           </View>
-          <View style={{display: 'flex', flexDirection: 'row', columnGap: 5}}>
-          <IconView>
+          <View style={{ display: 'flex', flexDirection: 'row', columnGap: 5 }}>
+            <IconView>
               <Ionicons name="time-outline" />
               <Text>{dayjs(event.startDate).format('h:mm A')}</Text>
             </IconView>

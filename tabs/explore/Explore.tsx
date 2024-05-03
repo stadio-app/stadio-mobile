@@ -35,6 +35,10 @@ const ALL_EVENTS = gql(`
           countryCode
           country
         }
+        locationImages {
+          uploadId
+          default
+        }
       }
       createdBy {
         id
@@ -53,7 +57,7 @@ export type GroupedEvents = {
 export function Explore() {
   const { authState } = useContext(AuthContext);
   const [search, setSearch] = useState('');
-  const [radius, setRadius] = useState(5000);
+  const [radius, setRadius] = useState(500000);
   const [latitude, setLatitude] = useState(41.8823144);
   const [longitude, setLongitude] = useState(-87.6346181);
   const { data, loading, error } = useQuery<EventsQuery, EventsQueryVariables>(
@@ -95,10 +99,12 @@ export function Explore() {
       else result.set(key, [event]);
     }
 
-    return Array.from(result.entries()).map<GroupedEvents>(([label, events]) => ({
-      label,
-      events
-    }));
+    return Array.from(result.entries()).map<GroupedEvents>(
+      ([label, events]) => ({
+        label,
+        events,
+      })
+    );
   }
 
   return (

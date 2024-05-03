@@ -11,7 +11,7 @@ export function EventsList({ groupedEvents }: EventsListProps) {
   return (
     <View>
       {groupedEvents.map(({ label, events }) => (
-        <View style={styles.listItem}>
+        <View style={styles.listItem} key={label}>
           <Text style={styles.listItem.header}>{label}</Text>
 
           {events.map((e) => (
