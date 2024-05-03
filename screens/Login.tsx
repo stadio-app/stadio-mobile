@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   Platform,
@@ -13,6 +13,9 @@ import {
 import { RootStackParamList } from '../types/RootStackParamList';
 import { AuthContext } from '../store/AuthStore';
 import { ApolloError } from '@apollo/client';
+import { SocialIcon } from '@rneui/themed';
+import { Divider } from '@rneui/base';
+import * as Google from 'expo-auth-session/providers/google';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -23,7 +26,27 @@ export function LoginScreen({ navigation }: Props) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { loginInternal, createUserHandler } = React.useContext(AuthContext);
+  const { loginInternal, createUserHandler, loginGoogle } =
+    React.useContext(AuthContext);
+
+  const resetState = () => {
+    setName('');
+    setEmail('');
+    setPassword('');
+    setLoading(false);
+    setCreateAccount(false);
+  };
+
+  const [_, response, promptAsync] = Google.useAuthRequest({
+    expoClientId: process.env.EXPO_PUBLIC_GOOGLE_EXPO_CLIENT_ID,
+    androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
+    iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+    webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+  });
+
+  useEffect(() => {
+    handleGoogleLogin();
+  }, [response]);
 
   const handleLogin = () => {
     setLoading(true);
@@ -37,7 +60,24 @@ export function LoginScreen({ navigation }: Props) {
         setError(error);
         alert(error);
       })
-      .finally(() => setLoading(false));
+      .finally(() => resetState());
+  };
+
+  const handleGoogleLogin = async () => {
+    const token = response?.authentication.accessToken;
+    if (token) {
+      loginGoogle(token)
+        .then((newAuthState) => {
+          navigation.navigate(
+            newAuthState.user?.active ? 'MainMenu' : 'EmailVerification'
+          );
+        })
+        .catch((error) => {
+          setError(error);
+          alert(error);
+        })
+        .finally(() => resetState());
+    }
   };
 
   const handleSignup = () => {
@@ -51,7 +91,7 @@ export function LoginScreen({ navigation }: Props) {
         setError(error);
         alert(error);
       })
-      .finally(() => setLoading(false));
+      .finally(() => resetState());
   };
 
   const handleCreateAccountClick = () => {
@@ -62,8 +102,9 @@ export function LoginScreen({ navigation }: Props) {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#10454f', height: '100%' }}>
-      <View style={{ ...styles.container, paddingHorizontal: 30 }}>
+    <SafeAreaView style={styles.view}>
+      <View style={styles.container}>
+        <Text style={styles.welcomeText}>Welcome to</Text>
         <Image
           source={require('../assets/logo-base.png')}
           style={styles.logo}
@@ -120,14 +161,7 @@ export function LoginScreen({ navigation }: Props) {
             )}
           </View>
 
-          <View
-            style={{
-              backgroundColor: '#00343e',
-              borderRadius: 5,
-              height: 50,
-              justifyContent: 'center',
-            }}
-          >
+          <View style={styles.loginButton}>
             <Button
               color={Platform.OS === 'android' ? '#00343e' : '#fff'}
               title={
@@ -143,12 +177,26 @@ export function LoginScreen({ navigation }: Props) {
               disabled={loading}
             />
           </View>
+
+          <View style={styles.socialButtons}>
+            <SocialIcon
+              type="google"
+              iconType="ant-design"
+              button
+              light
+              onPress={() => promptAsync()}
+            />
+            <SocialIcon type="apple" button light />
+          </View>
+
+          <Divider />
+
           <Text
             style={{ color: 'white', alignSelf: 'center' }}
             onPress={() => handleCreateAccountClick()}
           >
             {!createAccount
-              ? 'Creating a new account?'
+              ? "Don't have an account? Register"
               : 'Already have an account? Login'}
           </Text>
         </View>
@@ -158,15 +206,23 @@ export function LoginScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
+  view: { backgroundColor: '#10454f', height: '100%' },
   container: {
     backgroundColor: '#10454f',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 30,
+    paddingTop: 70,
+    gap: 20,
   },
+  welcomeText: { fontSize: 50, color: 'white', alignSelf: 'flex-start' },
   logo: {
     resizeMode: 'contain',
-    height: '40%',
+    height: '15%',
     width: '60%',
+    alignSelf: 'flex-start',
+    marginTop: -20,
+    marginBottom: 10,
   },
   input: {
     height: 50,
@@ -176,22 +232,16 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 15,
   },
-  appleButton: {
-    height: 50,
-    width: 250,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  googleButton: {
-    height: 50,
-    width: 250,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   loginButton: {
-    backgroundColor: '#333',
-    color: '#fff',
+    backgroundColor: '#00343e',
+    borderRadius: 25,
+    height: 50,
+    justifyContent: 'center',
+  },
+  socialButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginLeft: -15,
   },
 });
