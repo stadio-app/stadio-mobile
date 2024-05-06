@@ -78,12 +78,10 @@ export function Explore() {
   );
 
   function dateGroupedData(events: AllEvents): GroupedEvents[] {
-    const result = new Map<string, AllEvents>();
     const today = dayjs(new Date());
-    for (let event of events) {
+    const groupedEvents = events.reduce((map, event) => {
       const eventDate = dayjs(event.startDate);
       let key = 'Upcoming';
-
       if (eventDate.diff(today, 'day') === 0) {
         key = 'Today';
       } else if (eventDate.diff(today, 'day') === 1) {
@@ -94,16 +92,13 @@ export function Explore() {
         key = 'Next Week';
       }
 
-      const val = result.get(key);
-      if (val) val.push(event);
-      else result.set(key, [event]);
-    }
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)?.push(event);
+      return map;
+    }, new Map<string, AllEvents>());
 
-    return Array.from(result.entries()).map<GroupedEvents>(
-      ([label, events]) => ({
-        label,
-        events,
-      })
+    return Array.from(groupedEvents.entries()).map<GroupedEvents>(
+      ([label, events]) => ({ label, events })
     );
   }
 
