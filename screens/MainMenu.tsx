@@ -56,14 +56,6 @@ export function MainMenu() {
         component={Tabs.Profile}
         options={{ headerShown: false }}
       />
-
-      <Tab.Group>
-        <Tab.Screen
-          name="CreateLocation"
-          component={Tabs.CreateLocation}
-          options={{ headerShown: false }}
-        ></Tab.Screen>
-      </Tab.Group>
     </Tab.Navigator>
   );
 }
